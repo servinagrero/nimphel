@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import copy
+import json
 from collections import ChainMap, defaultdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from os import PathLike
 from typing import Callable, Dict, List, Optional, Tuple, Union
+
+import numpy as np
 
 #: A net can be either a number or a user defined name
 Net = Union[str, int]
@@ -158,10 +161,28 @@ class Component:
         """The name is set as a user defined name."""
         self._name[0] = name
 
-    def __invert__(self) -> Component:
-        """Invert the ports"""
-        self.ports = self.ports[::-1]
-        return self
+    def __str__(self) -> str:
+        params = {**self.params}
+        d = {
+            "name": self.name,
+            "id": self.num_id,
+            "ports": self.ports,
+            "params": self.params.maps,
+        }
+        return json.dumps(d)
+
+    def __pos__(self) -> Component:
+        """Make a copy and increment the num_id"""
+        other = copy.deepcopy(self)
+        other.num_id += 1
+        netlist.instances[self.name] += 1
+        return other
+
+    def __invert__(self) -> Tuple[Component, Component]:
+        """Create a loop of a component"""
+        other = +self
+        other.ports = self.ports[::-1]
+        return (self, other)
 
     def __lshift__(self, val: int):
         """Shift the ports and rotates"""
@@ -204,8 +225,7 @@ class Component:
         new_out = net()
         for i in range(1, nelem):
             new_ports = [last_port, *unchanged, new_out]
-            new_comp = copy.deepcopy(self)
-            new_comp.num_id += i + self.num_id
+            new_comp = +components[-1]
             new_comp.ports = new_ports
             components.append(new_comp)
             if i != nelem - 2:
@@ -213,8 +233,6 @@ class Component:
             else:
                 last_port, new_out = new_out, last_name()
 
-        # Update the global table of instances
-        netlist.instances[self.name] += nelem
         return components
 
     def __mul__(
@@ -237,40 +255,30 @@ class Component:
         "Components in parallel."
         components = [self]
         for i in range(1, val):
-            new_comp = copy.deepcopy(self)
-            new_comp.num_id += i
+            new_comp = +components[-1]
             components.append(new_comp)
 
-        # Update the global table of instances
-        netlist.instances[self.name] += val + 1
         return components
 
     def __xor__(self, val: int) -> List[Component]:
         "Same input different output."
         self.ports[-1] = net()
         components = [self]
-        for i in range(1, val):
-            new_comp = copy.deepcopy(self)
-            new_comp.num_id += i
+        for _ in range(1, val):
+            new_comp = +components[-1]
             new_comp.ports[-1] = net()
             components.append(new_comp)
-
-        # Update the global table of instances
-        netlist.instances[self.name] += val + 1
         return components
 
     def __and__(self, val: int) -> List[Component]:
         "Different input same output."
         self.ports[0] = net()
         components = [self]
-        for i in range(1, val + 1):
-            new_comp = copy.deepcopy(self)
-            new_comp.num_id += i
+        for i in range(1, val):
+            new_comp = +components[-1]
             new_comp.ports[0] = net()
             components.append(new_comp)
 
-        # Update the global table of instances
-        netlist.instances[self.name] += val + 1
         return components
 
 
@@ -378,13 +386,20 @@ class Circuit:
 
         self.exporter: Exporter = SpectreExporter()
 
-    def add(self, component: Union[List[Component], Component]):
+    def add(
+        self,
+        component: Union[
+            np.ndarray[Component], Tuple[Component], List[Component], Component
+        ],
+    ):
         """Add a component instance to the circuit.
 
         Args:
           component: Component or list of component instances.
         """
-        if isinstance(component, list):
+        if isinstance(component, np.ndarray):
+            self.components += np.ravel(component).tolist()
+        elif isinstance(component, (tuple, list)):
             self.components += component
         else:
             self.components.append(component)
@@ -512,3 +527,41 @@ def port_setter(comp: Component, ports_mask: Optional[Tuple[Net]] = None):
 
     new_ports = map(lambda p: p[0] or p[1], zip(mask, comp.ports))
     comp.ports = list(new_ports)
+
+
+def array(
+    size: Tuple[int, int],
+    comp: Component,
+    ports_fn: Optional[Callable[[Tuple[int]], Net]] = None,
+) -> np.ndarray:
+    """Create a 1D or 2D array of components.
+
+    If ports_fn is supplied, it is used to assign the ports based on the cordinates of the component.
+
+    Args:
+      size: Tuple containing (y,x) or (x,) dimensions.
+      comp: Component instance to create the array.
+      ports_fn: Function to assign the ports. The function should accept a list
+      with as many elements as
+
+    """
+
+    m = np.zeros(size, dtype=Component)
+    if ports_fn is None:
+        ports_fn = lambda c: comp.ports
+
+    last_comp = comp
+    if len(size) == 2:
+        for y, x in np.ndindex(m.shape):
+            new_comp = +last_comp
+            new_comp.ports = ports_fn([y, x])
+            m[y, x] = new_comp
+            last_comp = new_comp
+    else:
+        for x in np.ndindex(m):
+            new_comp = +last_comp
+            new_comp.ports = ports_fn([x])
+            m[x] = new_comp
+            last_comp = new_comp
+
+    return m
