@@ -184,6 +184,38 @@ class Component:
         other.ports = self.ports[::-1]
         return (self, other)
 
+    def loop(
+        self, ports_mask: Optional[Tuple[Net]] = None
+    ) -> Tuple[Component, Component]:
+        """Create a loop of a component give a port mask.
+
+        Args:
+          ports_mask: Mask to select the two ports to loop. if not supplied, it's assumed the
+          component has two ports and the loop is created by flipping the ports.
+
+        Example:
+          ports: IN, VDD, OUT, GND
+          mask: (1, 0, 1, 0)
+
+          Returns two components with ports:
+          IN, VDD, OUT, GND
+          OUT, VDD, IN, GND
+        """
+        if ports_mask is None:
+            return ~self
+
+        if sum(ports_mask) != 2:
+            raise ValueError("Cannot create loop for more than two ports.")
+
+        other = +self
+        first = ports_mask.index(1)
+        second = ports_mask.index(1, first + 1)
+        other.ports[first], other.ports[second] = (
+            other.ports[second],
+            other.ports[first],
+        )
+        return (self, other)
+
     def __lshift__(self, val: int):
         """Shift the ports and rotates"""
         self.ports = self.ports[:val] + self.ports[val:]
@@ -301,6 +333,9 @@ class Subckt:
         self.__fixed: bool = False
 
         netlist.subcircuits[self.name] = self
+
+    def __contains__(self, comp: Component):
+        return comp in self.components
 
     def fix(self):
         """Fix the subcircuit to prevent adding more components."""
