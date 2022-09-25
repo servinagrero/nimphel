@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import copy
 import json
-from collections import ChainMap, defaultdict
+from collections import ChainMap
 from dataclasses import asdict, dataclass
-from os import PathLike
 from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
+
+import nimphel
 
 #: A net can be either a number or a user defined name
 Net = Union[str, int]
@@ -39,70 +40,8 @@ def net() -> int:
     Returns:
       The new net.
     """
-    netlist.nets += 1
-    return int(netlist.nets - 1)
-
-
-class Exporter:
-    """Interface for a Exporter.
-
-    An exporter needs to implement functions to format a component instance, a subcircuit and a net.
-    """
-
-    def fmt_component(self, comp) -> str:
-        """Format a component instance."""
-        raise NotImplementedError
-
-    def fmt_subckt(self, subckt) -> str:
-        """Format a subcircuit definition."""
-        raise NotImplementedError
-
-    def fmt_net(self, net) -> str:
-        """Format a net."""
-        raise NotImplementedError
-
-
-class SpectreExporter(Exporter):
-    """Exporter implementation for Spectre"""
-
-    def __fmt_value(self, value):
-        if isinstance(value, list):
-            return f'[ {" ".join(map(str, value))} ]'
-        if isinstance(value, (float, int)):
-            return f"{value:.2F}"
-        return f'"{value}"'
-
-    def fmt_component(self, comp) -> str:
-        if hasattr(comp, "fmt"):
-            return comp.fmt()
-
-        ports = " ".join(map(self.fmt_net, comp.ports))
-        params_not_nil = {k: v for k, v in comp.params.items() if v}
-        params = " ".join(
-            [f"{k}={self.__fmt_value(v)}" for k, v in params_not_nil.items()]
-        )
-        return f"{comp.name[0].upper()}{comp.num_id} ({ports}) {comp.name} {params}"
-
-    def fmt_subckt(self, subckt) -> str:
-        comps = "\n".join(map(self.fmt_component, subckt.components))
-        ports = " ".join(map(self.fmt_net, subckt.ports))
-        nil_params = [f"{k}" for k, v in subckt.params.items() if not v]
-        val_params = [f"{k}={v}" for k, v in subckt.params.items() if v]
-        if val_params or nil_params:
-            params = f"parameters {' '.join(nil_params + val_params)}\n"
-        else:
-            params = ""
-        return (
-            f"subckt {subckt.name} {ports}\n"
-            f"{params}"
-            f"{comps}\n"
-            f"ends {subckt.name}\n"
-        )
-
-    def fmt_net(self, net: Union[str, int]) -> str:
-        if isinstance(net, int):
-            return f"net{net}"
-        return net
+    nimphel.netlist.nets += 1
+    return int(nimphel.netlist.nets - 1)
 
 
 class Component:
@@ -139,8 +78,8 @@ class Component:
         if not ports:
             raise AttributeError(f"Ports for {self.name} are empty.")
 
-        self.num_id = netlist.instances[self.name]
-        netlist.instances[self.name] += 1
+        self.num_id = nimphel.netlist.instances[self.name]
+        nimphel.netlist.instances[self.name] += 1
 
         self.ports = ports
         user_params = params if params else {}
@@ -175,7 +114,7 @@ class Component:
         """Make a copy and increment the num_id"""
         other = copy.deepcopy(self)
         other.num_id += 1
-        netlist.instances[self.name] += 1
+        nimphel.netlist.instances[self.name] += 1
         return other
 
     def __invert__(self) -> Tuple[Component, Component]:
@@ -314,179 +253,6 @@ class Component:
         return components
 
 
-class Subckt:
-    """Class to handle a subcircuit.
-
-    Attributes:
-      name: Name of the subcircuit.
-      components: List of component instances inside the subcircuit.
-      ports: List of ports of the subcircuit.
-      params: List of parameters of the subcircuit.
-      fixed: If True, no more components can be added to the subcircuit.
-    """
-
-    def __init__(self, name: str, ports: Ports, params: Optional[Params] = None):
-        self.name: str = name
-        self.components: List[Component] = []
-        self.ports: Ports = ports
-        self.params: Optional[Params] = params
-        self.__fixed: bool = False
-
-        netlist.subcircuits[self.name] = self
-
-    def __contains__(self, comp: Component):
-        return comp in self.components
-
-    def fix(self):
-        """Fix the subcircuit to prevent adding more components."""
-        self.__fixed = True
-
-    def add(self, component: Union[List[Component], Component]):
-        """Add a component instance to the list of components.
-
-        If the subcircuit is fixed, a warning is printed and nothing happens.
-
-        Args:
-            component: Component or list of components to add.
-        """
-        if self.__fixed:
-            print(f"WARNIG: Subcircuit {self.name} is fixed")
-        else:
-            if isinstance(component, list):
-                self.components += component
-            else:
-                self.components.append(component)
-
-    def inst(self, ports: Ports, params: Optional[Params] = None) -> Component:
-        """Create a component instance from the subcircuit.
-
-        Args:
-          ports: Ports of the subcircuit instance.
-          params: Parameters for the subcircuit instance.
-
-        Returns:
-          Component instance.
-
-        Raises:
-          KeyError: The number of ports given is checked against the defined ones.
-          KeyError: There are default parameters that haven't been supplied.
-          KeyError: The parameters given do not match the default ones.
-        """
-
-        if len(ports) != len(self.ports):
-            raise KeyError(
-                f"Wrong number of ports supplied. "
-                f"Needed {len(self.ports)} ports but {len(ports)} were given."
-            )
-
-        nil_params: Params = {}
-        if self.params:
-            nil_params = {k: v for k, v in self.params.items() if v is None}
-
-        if nil_params and params is None:
-            raise KeyError(
-                f"Must supply non default parameters. "
-                f"Needed {list(nil_params.keys())}"
-            )
-
-        if nil_params and params and (params.keys() != nil_params.keys()):
-            raise KeyError(
-                f"Parameters do not match with default params. "
-                f"Needed {list(nil_params.keys())} but got {list(params.keys())}"
-            )
-
-        user_params = params if params else {}
-        return Component(ports, {**nil_params, **user_params}, name=self.name)
-
-
-class Circuit:
-    """Class to handle the state of the circuit.
-
-    Attributes:
-      options: Simulator options.
-      instances: Dict to track component ids.
-      components: List of component instances.
-      subcircuits: Dict to track subcircuit definitions.
-      nets: Counter to keep track of the nets.
-      exporter: Exporter used to create the netlist.
-    """
-
-    def __init__(self):
-        self.options: Dict[str, str] = {}
-
-        self.instances = defaultdict(int)
-        self.components: List[Component] = []
-        self.subcircuits: Dict[str, Subckt] = {}
-        self.nets: int = 0
-
-        self.exporter: Exporter = SpectreExporter()
-
-    def add(
-        self,
-        component: Union[
-            np.ndarray[Component], Tuple[Component], List[Component], Component
-        ],
-    ):
-        """Add a component instance to the circuit.
-
-        Args:
-          component: Component or list of component instances.
-        """
-        if isinstance(component, np.ndarray):
-            self.components += np.ravel(component).tolist()
-        elif isinstance(component, (tuple, list)):
-            self.components += component
-        else:
-            self.components.append(component)
-
-    def __contains__(self, inst: Union[Component, Subckt]) -> bool:
-        """Checks if a component or subcircuit is present inside the circuit."""
-        if isinstance(inst, Component):
-            return inst in self.components
-        return inst in self.subcircuits or any(
-            inst.name == c.name for c in self.components
-        )
-
-    def into_subckt(self, name: str, ports: Ports, params: Params = None) -> Subckt:
-        """Convert the state into a subcircuit.
-
-        TODO: This subckt will register itself to the global netlist. Make this optional or prevent it from happening?
-
-        Args:
-          name: Name of the subcircuit.
-          ports: Ports of the subcircuit.
-          params: Parameters of the subcircuit.
-
-        Returns:
-          Subcircuit
-        """
-        subckt = Subckt(name, ports, params if params else {})
-
-        subckt.add(self.components)
-        return subckt
-
-    def export(self) -> str:
-        """Export the current circuit.
-
-        The circuit is exported using the assigned exporter.
-
-        Returns:
-          The formated circuit as a string.
-        """
-        subckts = "\n".join(map(self.exporter.fmt_subckt, self.subcircuits.values()))
-        components = "\n".join(map(self.exporter.fmt_component, self.components))
-        return f"{subckts}\n{components}\n" f'{self.options if self.options else ""}'
-
-    def export_to_file(self, outfile: Union[str, bytes, PathLike]):
-        """Export the netlist directly to a file.
-
-        Args:
-          outfile: Path to the file.
-        """
-        with open(outfile, "w+") as file:
-            file.write(self.export())
-
-
 def simple_component(cls):
     """Wrapper to create components that are very simple.
 
@@ -513,10 +279,6 @@ def simple_component(cls):
 
     setattr(cls, "__init__", init)
     return cls
-
-
-#: Global state
-netlist = Circuit()
 
 
 def port_getter(

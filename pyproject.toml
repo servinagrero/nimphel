@@ -5,6 +5,7 @@ description = "Netlist Invention and Manipulation with Python Embedded Language"
 authors = ["Sergio Vinagrero <servinagrero@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [{include = "nimphel"}]
 classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python",
