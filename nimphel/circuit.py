@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from os import PathLike
-from typing import List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -15,7 +15,6 @@ class Circuit:
     """Class to handle the state of the circuit.
 
     Attributes:
-      options: Simulator options.
       instances: Dict to track component ids.
       components: List of component instances.
       subcircuits: Dict to track subcircuit definitions.
@@ -24,8 +23,6 @@ class Circuit:
     """
 
     def __init__(self):
-        self.options: Dict[str, str] = {}
-
         self.instances = defaultdict(int)
         self.components: List[Component] = []
         self.subcircuits: Dict[str, Subckt] = {}
@@ -75,7 +72,7 @@ class Circuit:
         subckt.add(self.components)
         return subckt
 
-    def export(self) -> str:
+    def export(self, exporter: Optional[Exporter] = None) -> str:
         """Export the current circuit.
 
         The circuit is exported using the assigned exporter.
@@ -83,9 +80,12 @@ class Circuit:
         Returns:
           The formated circuit as a string.
         """
+        if exporter:
+            self.exporter = exporter()
+
         subckts = "\n".join(map(self.exporter.fmt_subckt, self.subcircuits.values()))
         components = "\n".join(map(self.exporter.fmt_component, self.components))
-        return f"{subckts}\n{components}\n" f'{self.options if self.options else ""}'
+        return f"{subckts}\n{components}\n"
 
     def export_to_file(self, outfile: Union[str, bytes, PathLike]):
         """Export the netlist directly to a file.

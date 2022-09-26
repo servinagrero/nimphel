@@ -252,6 +252,19 @@ class Component:
 
         return components
 
+    def to_dict(self) -> Dict[str, str]:
+        maps = self.params.maps
+        return {
+            "name": self.name,
+            "id": self.num_id,
+            "ports": self.ports,
+            "params": {**maps[0], **maps[1]},
+        }
+
+    def to_json(self) -> str:
+        """Export a component to a JSON string."""
+        return json.dumps(self.to_dict())
+
 
 def simple_component(cls):
     """Wrapper to create components that are very simple.
@@ -282,7 +295,7 @@ def simple_component(cls):
 
 
 def port_getter(
-    ports_mask: Tuple[Net], comps: List[Component], flatten=False
+    ports_mask: Tuple[Net, ...], comps: List[Component], flatten=False
 ) -> List[Tuple[Net]]:
     """Obtain the ports of a list of components based on a mask.
 
