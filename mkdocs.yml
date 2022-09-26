@@ -1,0 +1,29 @@
+site_name: NIMPHEL
+repo_url: https://github.com/servinagrero/nimphel
+repo_name: nimphel
+edit_uri: ""
+theme:
+    logo: img/logo.png
+    name: material
+    font:
+        text: Inter
+        code: JetBrains Mono
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  
+nav:
+    - Introduction: index.md
+    - Installation: install.md
+    - Usage: 
+        - Components: usage/component.md
+        - Subcircuits: usage/subcircuit.md
+        - Circuits: usage/circuit.md
+        - Manipulation: usage/manipulation.md
+        - Exporters: usage/exporter.md
+
+        
