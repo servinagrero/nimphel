@@ -6,7 +6,8 @@ import copy
 import json
 from collections import ChainMap
 from dataclasses import asdict, dataclass
-from typing import Callable, Dict, List, Optional, Tuple, Union
+from itertools import repeat
+from typing import Any, Callable, Dict, Iterable, List, Optional, Sized, Tuple, Union
 
 import numpy as np
 
@@ -24,21 +25,28 @@ ParamValue = Union[float, int, str, None]
 #: A parameter is a list of key value pairs
 Params = Dict[str, ParamValue]
 
+#: Coordinates of a circuit in an array. 1D or 2D.
+Coords = Union[Tuple[int], Tuple[int, int]]
+
+#: Mask to select ports
+Mask = Tuple[Union[Net, Callable[[Coords], str]], ...]
+
 
 @dataclass
 class Model:
-    "A model holds default parameters for a specific type of component."
+    """A model holds default parameters for a specific type of component."""
+
     name: str
     params: Dict[str, ParamValue]
 
 
 def net() -> int:
-    """Generate a new net.
+    """Generate a new global net.
 
-    TODO: When we generate a local netlist, this function still returns a counter related to the global one. If the local netlist is converted into a subcircuit, it shouldn't matter as the nets inside the subcircuit definition are independent. Still, it would be a good idea to investigate.
+    The number of nets is increased in the global circuit.
 
     Returns:
-      The new net.
+        The new net.
     """
     nimphel.netlist.nets += 1
     return int(nimphel.netlist.nets - 1)
@@ -50,17 +58,18 @@ class Component:
     There can be no two instances of the same component with the same id,
     except if one of them is inside a subcircuit.
 
-    The names are stored in a list to keep the following priority:
+    The name of the device is the first not null name in the list of names.
+    The list of names han the following priority:
 
-    1. User defined name.
-    2. Model name.
-    3. Name of the subclass.
+      1. User defined name.
+      2. Model name.
+      3. Name of the subclass.
 
     Attributes:
-      num_id: Numeric id given to the instance.
-      name: Name of the component instance.
-      ports: List of ports of the instance.
-      params: Dict of parameters defaulting to the model parameters if provided.
+        num_id: Numeric id given to the instance.
+        name: Name of the component instance.
+        ports: List of ports of the component.
+        params: Dict of parameters using the model parameters as default if provided.
 
     Raises:
         AttributeError: The list of ports is empty
@@ -76,22 +85,22 @@ class Component:
         self._name = [name, model.name if model else None, type(self).__name__]
 
         if not ports:
-            raise AttributeError(f"Ports for {self.name} are empty.")
+            raise ValueError(f"Ports for {self.name} cannot empty.")
 
         self.num_id = nimphel.netlist.instances[self.name]
         nimphel.netlist.instances[self.name] += 1
 
         self.ports = ports
-        user_params = params if params else {}
         self.params: ChainMap[str, ParamValue] = ChainMap(
-            user_params, model.params if model else {}
+            params if params else {}, model.params if model else {}
         )
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Returns the name of the component.
 
-        The name of the device is the first not null name in the list of names.
+        Returns:
+            The actual name of the device.
         """
         return next(filter(bool, self._name))
 
@@ -101,69 +110,73 @@ class Component:
         self._name[0] = name
 
     def __str__(self) -> str:
-        params = {**self.params}
-        d = {
-            "name": self.name,
-            "id": self.num_id,
-            "ports": self.ports,
-            "params": self.params.maps,
-        }
-        return json.dumps(d)
+        """Returns the string representation of the component."""
+        return json.dumps(self.to_dict())
 
     def __pos__(self) -> Component:
-        """Make a copy and increment the num_id"""
+        """Make a copy and increment the id of the new component.
+
+        The component is copied using deepcopy.
+
+        Returns:
+            The new component with num_id increased by 1.
+        """
         other = copy.deepcopy(self)
         other.num_id += 1
         nimphel.netlist.instances[self.name] += 1
         return other
 
-    def __invert__(self) -> Tuple[Component, Component]:
-        """Create a loop of a component"""
-        other = +self
-        other.ports = self.ports[::-1]
-        return (self, other)
-
     def loop(
-        self, ports_mask: Optional[Tuple[Net]] = None
+        self, mask: Optional[Tuple[int, ...]] = None
     ) -> Tuple[Component, Component]:
-        """Create a loop of a component give a port mask.
-
-        Args:
-          ports_mask: Mask to select the two ports to loop. if not supplied, it's assumed the
-          component has two ports and the loop is created by flipping the ports.
+        """Create a self loop of a component given a mask.
 
         Example:
-          ports: IN, VDD, OUT, GND
-          mask: (1, 0, 1, 0)
+            Given a component with ports [IN, VDD, OUT, GND] and mask (1, 0, 1, 0), loop will return a list of components with ports [IN, VDD, OUT, GND] and [OUT, VDD, IN, GND]
 
-          Returns two components with ports:
-          IN, VDD, OUT, GND
-          OUT, VDD, IN, GND
+        Args:
+            mask: Mask to select the two ports to loop. If None, use the first two ports.
+
+        Returns:
+            Tuple containing both elements of the loop.
+
+        Raises:
+            ValueError: The mask has more or less than two ports selected.
         """
-        if ports_mask is None:
-            return ~self
+        if len(self.ports) < 2:
+            raise ValueError("Component cannot self loop as it only has one port.")
 
-        if sum(ports_mask) != 2:
-            raise ValueError("Cannot create loop for more than two ports.")
+        if mask is None:
+            mask = (1, 1) + (0,) * max(len(self.ports), 0)
+        elif sum(mask) != 2:
+            raise ValueError("Two ports are needed to create a self loop.")
 
         other = +self
-        first = ports_mask.index(1)
-        second = ports_mask.index(1, first + 1)
+        first = mask.index(1)
+        second = mask.index(1, first + 1)
         other.ports[first], other.ports[second] = (
             other.ports[second],
             other.ports[first],
         )
         return (self, other)
 
+    def __invert__(self) -> Tuple[Component, Component]:
+        """Create a self loop of a component.
+        Overloaded operator for ``loop``"""
+        return self.loop()
+
     def __lshift__(self, val: int):
-        """Shift the ports and rotates"""
+        """Shift the ports in the left direction."""
         self.ports = self.ports[:val] + self.ports[val:]
 
     def __rshift__(self, val: int):
+        """Shift the ports in the right direction."""
         self.__lshift__(-val)
 
     def chain(
-        self, val: Union[int, Tuple[int, Net]], port_mask: Optional[Tuple] = None
+        self,
+        val: Union[int, Tuple[Net, ...], Tuple[int, Callable[[int], str]]],
+        mask: Optional[Mask] = None,
     ) -> List[Component]:
         """If val is a tuple, various things can happen.
         First, len(tuple) == len(comp.ports)
@@ -179,8 +192,24 @@ class Component:
         the index of the chain and should return a net.
 
         comp * (0, 0, "Input", lambda d: f'net{d}')
+
+        If val is an int, chain `val` times as normal, that is
+        (in, out) -> (out, net()) -> ... -> (net(), net())
+
+        Only the global state keeps track of the updated ids, this means that the original component mantains it's id.
+
+        Args:
+            val:
+            mask:
+
+        Returns:
+            List containing the chain of components.
+
+        TODO:
+          * Use the mask to select the ports
         """
         components = [self]
+
         if isinstance(val, tuple):
             nelem = val[0]
             if isinstance(val[1], Callable):
@@ -199,7 +228,7 @@ class Component:
             new_comp = +components[-1]
             new_comp.ports = new_ports
             components.append(new_comp)
-            if i != nelem - 2:
+            if i != (nelem - 2):
                 last_port, new_out = new_out, net()
             else:
                 last_port, new_out = new_out, last_name()
@@ -207,32 +236,45 @@ class Component:
         return components
 
     def __mul__(
-        self, val: Union[int, Tuple[int, Net], Tuple[int, Callable[[int], str]]]
+        self, val: Union[int, Tuple[Net, ...], Tuple[int, Callable[[int], str]]]
     ) -> List[Component]:
-        """Components in series.
-
-        If val is an int, chain `val` times as normal, that is
-        (in, out) -> (out, net()) -> ... -> (net(), net())
-
-        Component needs to be deepcopied to copy also all methods made by the user.
-        If not, self refers always to this object and not the new generated one.
-
-        WARNING: Only the global state keeps track of the updated ids.
-        The component mantains it's original id
+        """Create components in a chain.
+        Overloaded operator for ``chan``.
         """
-        return self.chain(val, port_mask=None)
+        return self.chain(val)
 
-    def __or__(self, val: int) -> List[Component]:
-        "Components in parallel."
+    def parallel(self, val: int) -> List[Component]:
+        """Create components in parallel.
+
+        Components in parallel share the same input and output ports.
+
+        Args:
+            val: Number of components to create.
+
+        Returns:
+            List containing the components in parallel.
+        """
         components = [self]
-        for i in range(1, val):
+        for _ in range(1, val):
             new_comp = +components[-1]
             components.append(new_comp)
 
         return components
 
-    def __xor__(self, val: int) -> List[Component]:
-        "Same input different output."
+    def __or__(self, val: int) -> List[Component]:
+        """Create components in parallel.
+        Overloaded operator for ``parallel``"""
+        return self.parallel(val)
+
+    def fanout(self, val: int) -> List[Component]:
+        """Create components with the same input and different output.
+
+        Args:
+            val: Number of components to create.
+
+        Returns:
+            List of components.
+        """
         self.ports[-1] = net()
         components = [self]
         for _ in range(1, val):
@@ -241,9 +283,22 @@ class Component:
             components.append(new_comp)
         return components
 
-    def __and__(self, val: int) -> List[Component]:
-        "Different input same output."
-        self.ports[0] = net()
+    def __xor__(self, val: int) -> List[Component]:
+        """Create components with the same input and different output.
+        Overloaded operator for ``fanout``."""
+        return self.fanout(val)
+
+    def direct(self, val: int) -> List[Component]:
+        """Create components with the different inputs and same output.
+
+        The first port of the component used to call the method gets modified.
+
+        Args:
+            val: Number of components to create.
+
+        Returns:
+            List of components.
+        """
         components = [self]
         for i in range(1, val):
             new_comp = +components[-1]
@@ -252,7 +307,13 @@ class Component:
 
         return components
 
-    def to_dict(self) -> Dict[str, str]:
+    def __and__(self, val: int) -> List[Component]:
+        """Create components with the different inputs and same output.
+        Overloaded operator for ``direct``."""
+        return self.direct(val)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Export a component to a dict"""
         maps = self.params.maps
         return {
             "name": self.name,
@@ -270,12 +331,13 @@ def simple_component(cls):
     """Wrapper to create components that are very simple.
 
     Args:
-      cls: The class definition
+        cls: The class definition
 
     Returns:
-      The class with custom init to generate components.
+        The class to generate the specified component.
 
-    TODO: Add safety guards with the number of ports
+    Todo:
+        * Add safety guards for the number of ports.
     """
     cls_name = cls.__dict__.get("name", cls.__name__)
     cls_model = cls.__dict__.get("model", None)
@@ -294,84 +356,136 @@ def simple_component(cls):
     return cls
 
 
-def port_getter(
-    ports_mask: Tuple[Net, ...], comps: List[Component], flatten=False
-) -> List[Tuple[Net]]:
-    """Obtain the ports of a list of components based on a mask.
+def get_port(
+    comp: Component, mask: Tuple[Net, ...], flatten: bool = False
+) -> Tuple[Net, ...]:
+    """Get a port from a component given a mask.
+
+    This function serves as a helper for ``port_getter``.
+
+    Example:
+
+        Given a component with ports [in, out, VDD] and a mask (1, 0, 0), get_port will return (in, 0, 0). If flatten is True, the result would be (in,).
 
     Args:
-      ports_mask: Tuple containing the ports to obtain. A value of 1 in a position means to extract that value and 0 means to ignore it.
-      comps: List of components.
-      flatten: If True, return only non null values.
+        comp: Component to obtain the ports from.
+        mask: Mask to select the ports to obtain.
+        flatten: If True, reduce the ports to only the selected ones.
+
+    Returns:
+        The tuple containing the ports selected.
+    """
+    res = map(lambda pair: pair[1] if pair[0] else 0, zip(mask, comp.ports))
+    if flatten:
+        return tuple(filter(bool, res))
+    return tuple(res)
+
+
+def port_getter(
+    comps: Union[Component, Iterable[Component]],
+    mask: Tuple[Net, ...],
+    flatten: bool = False,
+) -> Union[Tuple[Net, ...], List[Tuple[Net, ...]]]:
+    """Obtain the ports of a list of components based on a mask.
+
+    This functions automatically maps the function get_port if comps is a list of components. See ``get_port`` to understand how to use the mask.
+
+    Args:
+        mask: Tuple containing the ports to obtain.
+        comps: Component or list of components.
+        flatten: If True, return only the ports requested.
 
     Returns:
        List of tuples of ports.
     """
-    ports: List[Tuple[Net]] = []
-    for c in comps:
-        p = map(lambda pair: pair[1] if pair[0] else 0, zip(ports_mask, c.ports))
-        if flatten:
-            ports.append(tuple(filter(bool, p)))
-        else:
-            ports.append(tuple(p))
-
-    return ports
+    if isinstance(comps, Iterable):
+        ports = map(lambda comp: get_port(comp, mask, flatten), comps)
+        return list(ports)
+    return get_port(comps, mask, flatten)
 
 
-def port_setter(comp: Component, ports_mask: Optional[Tuple[Net]] = None):
-    """
-    Args:
-      comp: Component instance to set the ports.
-      ports_mask: Mask of ports to change. A string in a position will change the original port to the value in the mask at that position.
+def set_port(comp: Component, mask: Optional[Tuple[Net, ...]] = None):
+    """Modify the ports of a component given a mask.
+
+    The mask is a tuple containing 0 or a string:
+
+        * 0 to keep the original value.
+        * A string denoting the new port name.
+
+    This functions serves as a helper for ``port_setter``.
 
     Example:
-        comp.ports = [ "vdd", "in", "out", "gnd"]
-        mask = ("INPUT", 0, 0, "OUT")
-    """
-    if ports_mask is None:
-        mask: Tuple[Net] = (1,) * len(comp.ports)
-    else:
-        if len(ports_mask) != len(comp.ports):
-            raise KeyError("Wrong mask given")
-        mask = ports_mask
+        Given a component with ports [vdd, in, out, gnd] and a mask ("INPUT", 0, 0, "OUT"), the ports of the component will be changed to [INPUT, in, out, OUT]
 
-    new_ports = map(lambda p: p[0] or p[1], zip(mask, comp.ports))
-    comp.ports = list(new_ports)
+    Args:
+        comp: Component to modify.
+        mask: Optional mask of ports to modify. If mask is None, do nothing.
+
+    Raises:
+        ValueError: The mask length is not equal to the number of ports..
+    """
+    if mask and len(mask) != len(comp.ports):
+        raise ValueError("Wrong mask given")
+
+    if mask:
+        comp.ports = list(map(lambda p: p[0] or p[1], zip(mask, comp.ports)))
+
+
+def port_setter(
+    comps: Union[Component, Iterable[Component]],
+    mask: Optional[Union[List[Tuple[Net, ...]], Tuple[Net, ...]]] = None,
+):
+    """Modify the ports of a component or list of components given a mask.
+
+    Args:
+      comp: Component or list of components.
+      mask: Mask of ports to change.
+
+    Raises:
+      ValueError: When a single component is given but a list of masks is supplied.
+      ValueError: When the number of masks does not match the number of components.
+    """
+
+    if isinstance(comps, Component):
+        if mask and isinstance(mask, Iterable):
+            raise ValueError("Mask needs to be a single tuple.")
+        set_port(comps, mask)
+    else:
+        if mask is None:
+            list(map(set_port, comps, repeat(mask)))
+        elif mask and len(comps) != len(mask):
+            raise ValueError("Components and mask need to be the same length")
+        else:
+            list(map(set_port, comps, mask))
 
 
 def array(
-    size: Tuple[int, int],
+    size: Tuple[int, ...],
     comp: Component,
-    ports_fn: Optional[Callable[[Tuple[int]], Net]] = None,
+    ports_fn: Optional[Callable[[Coords], List[Net]]] = None,
 ) -> np.ndarray:
     """Create a 1D or 2D array of components.
 
-    If ports_fn is supplied, it is used to assign the ports based on the cordinates of the component.
+    To modify the ports of each component upon creation, the parameters `ports_fn` can be used. This functions accepts the coordinates of the component as a tuple and should return a list containing the ports of the component. If `ports_fn` is None, the ports are the same as the ones in `comp`.
 
     Args:
-      size: Tuple containing (y,x) or (x,) dimensions.
-      comp: Component instance to create the array.
-      ports_fn: Function to assign the ports. The function should accept a list
-      with as many elements as
+        size: Tuple containing (y,x) or (x,) dimensions.
+        comp: Component instance to create the array.
+        ports_fn: Function to assign the ports. The function accepts just a tuple containing the coordinates of the component in the array.
 
+    Returns:
+       The array with the component instances.
     """
 
-    m = np.zeros(size, dtype=Component)
+    arr = np.zeros(size, dtype=Component)
     if ports_fn is None:
         ports_fn = lambda c: comp.ports
 
     last_comp = comp
-    if len(size) == 2:
-        for y, x in np.ndindex(m.shape):
-            new_comp = +last_comp
-            new_comp.ports = ports_fn([y, x])
-            m[y, x] = new_comp
-            last_comp = new_comp
-    else:
-        for x in np.ndindex(m):
-            new_comp = +last_comp
-            new_comp.ports = ports_fn([x])
-            m[x] = new_comp
-            last_comp = new_comp
+    for coord in np.ndindex(arr.shape):
+        new_comp = +last_comp
+        new_comp.ports = ports_fn(tuple(coord))
+        arr[coord] = new_comp
+        last_comp = new_comp
 
-    return m
+    return arr
