@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import nimphel
 
@@ -94,14 +94,14 @@ class Subckt:
         user_params = params if params else {}
         return Component(ports, {**nil_params, **user_params}, name=self.name)
 
-    def to_dict(self) -> str:
+    def to_dict(self) -> Dict[str, Any]:
         return {
             "name": self.name,
             "ports": self.ports,
-            "components": [c.to_dict() for c in self.components],
             "params": self.params,
+            "components": [c.to_dict() for c in self.components],
             "fixed": self.__fixed,
         }
 
-    def to_json(self) -> str:
+    def __str__(self) -> str:
         return json.dumps(self.to_dict())

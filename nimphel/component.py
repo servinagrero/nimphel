@@ -322,10 +322,6 @@ class Component:
             "params": {**maps[0], **maps[1]},
         }
 
-    def to_json(self) -> str:
-        """Export a component to a JSON string."""
-        return json.dumps(self.to_dict())
-
 
 def simple_component(cls):
     """Wrapper to create components that are very simple.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from .circuit import Circuit
+from .circuit import Circuit, create_graph
 from .component import (
     Component,
     Model,
