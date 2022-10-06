@@ -21,8 +21,9 @@ class Subckt:
       fixed: If True, no more components can be added to the subcircuit.
     """
 
-    def __init__(self, name: str, ports: Ports, params: Optional[Params] = None):
+    def __init__(self, name: str, ports: Ports, params: Optional[Params] = None, letter: Optional[str] = None):
         self.name: str = name
+        self.letter = letter if letter else self.name[0].upper()
         self.components: List[Component] = []
         self.ports: Ports = ports
         self.params: Optional[Params] = params
@@ -92,7 +93,7 @@ class Subckt:
             )
 
         user_params = params if params else {}
-        return Component(ports, {**nil_params, **user_params}, name=self.name)
+        return Component(ports, {**nil_params, **user_params}, name=self.name, letter=self.letter)
 
     def to_dict(self) -> Dict[str, Any]:
         return {

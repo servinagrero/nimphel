@@ -80,9 +80,12 @@ class Component:
         ports: Ports,
         params: Optional[Params] = None,
         name: Optional[str] = None,
+        letter: Optional[str] = None,
         model: Optional[Model] = None,
     ):
         self._name = [name, model.name if model else None, type(self).__name__]
+
+        self.letter = letter if letter else self.name[0].upper()
 
         if not ports:
             raise ValueError(f"Ports for {self.name} cannot empty.")
@@ -300,7 +303,7 @@ class Component:
             List of components.
         """
         components = [self]
-        for i in range(1, val):
+        for _ in range(1, val):
             new_comp = +components[-1]
             new_comp.ports[0] = net()
             components.append(new_comp)
@@ -316,6 +319,7 @@ class Component:
         """Export a component to a dict"""
         maps = self.params.maps
         return {
+            "letter": self.letter,
             "name": self.name,
             "id": self.num_id,
             "ports": self.ports,
@@ -336,15 +340,17 @@ def simple_component(cls):
         * Add safety guards for the number of ports.
     """
     cls_name = cls.__dict__.get("name", cls.__name__)
+    cls_letter = cls.__dict__.get("letter", None)
     cls_model = cls.__dict__.get("model", None)
     def_params = cls.__dict__.get("defaults", {})
 
-    def init(self, ports, params=None, model=None, name=None):
+    def init(self, ports, params=None, model=None, name=None, letter=None):
         user_params = {} if params is None else params
         super(cls, self).__init__(
             ports,
             {**def_params, **user_params},
             name=name or cls_name,
+            letter=letter or cls_letter,
             model=model or cls_model,
         )
 

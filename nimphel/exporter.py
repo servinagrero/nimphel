@@ -43,7 +43,7 @@ class SpectreExporter(Exporter):
         params = " ".join(
             [f"{k}={self.__fmt_value(v)}" for k, v in params_not_nil.items()]
         )
-        return f"{comp.name[0].upper()}{comp.num_id} ({ports}) {comp.name} {params}"
+        return f"{comp.letter}{comp.num_id} ({ports}) {comp.name} {params}"
 
     def fmt_subckt(self, subckt) -> str:
         comps = "\n".join(map(self.fmt_component, subckt.components))
