@@ -84,19 +84,17 @@ class Component:
         model: Optional[Model] = None,
     ):
         self._name = [name, model.name if model else None, type(self).__name__]
-
         self.letter = letter if letter else self.name[0].upper()
 
         if not ports:
             raise ValueError(f"Ports for {self.name} cannot empty.")
+        self.ports = ports
 
         self.num_id = nimphel.netlist.instances[self.name]
         nimphel.netlist.instances[self.name] += 1
 
-        self.ports = ports
-        self.params: ChainMap[str, ParamValue] = ChainMap(
-            params if params else {}, model.params if model else {}
-        )
+        self.model = model
+        self.params = params if params else {}
 
     @property
     def name(self) -> str:
@@ -105,12 +103,27 @@ class Component:
         Returns:
             The actual name of the device.
         """
-        return next(filter(bool, self._name))
+        return next(filter(bool, self._name), "")
 
     @name.setter
     def name(self, name: str):
         """The name is set as a user defined name."""
         self._name[0] = name
+
+    @classmethod
+    def from_json(cls, json_str: str) -> Component:
+        """Create a component from a JSON string."""
+        data = json.loads(json_str)
+        model = data.get("model", None)
+        if model:
+            model = Model(**model)
+        return cls(
+            data["ports"],
+            params=data.get("params", {}),
+            name=data.get("name", None),
+            letter=data.get("letter", None),
+            model=model,
+        )
 
     def __str__(self) -> str:
         """Returns the string representation of the component."""
@@ -317,13 +330,14 @@ class Component:
 
     def to_dict(self) -> Dict[str, Any]:
         """Export a component to a dict"""
-        maps = self.params.maps
+        model = None if not self.model else asdict(self.model)
         return {
             "letter": self.letter,
             "name": self.name,
             "id": self.num_id,
             "ports": self.ports,
-            "params": {**maps[0], **maps[1]},
+            "model": model,
+            "params": self.params,
         }
 
 
@@ -348,7 +362,7 @@ def simple_component(cls):
         user_params = {} if params is None else params
         super(cls, self).__init__(
             ports,
-            {**def_params, **user_params},
+            params={**def_params, **user_params},
             name=name or cls_name,
             letter=letter or cls_letter,
             model=model or cls_model,

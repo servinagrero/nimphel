@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import json
 from collections import Counter, defaultdict
 from itertools import islice
@@ -112,13 +114,30 @@ class Circuit:
             "instances": dict(self.instances),
             "components": [c.to_dict() for c in self.components],
             "subcircuits": {k: v.to_dict() for k, v in self.subcircuits.items()},
-            "exporter": self.exporter.__class__.__name__,
             "nets": self.nets,
         }
 
     def __str__(self) -> str:
         """Returns the string representation of the component."""
         return json.dumps(self.to_dict())
+
+    @classmethod
+    def from_json(cls, json_str: str) -> Circuit:
+        """ """
+        data = json.loads(json_str)
+        circuit = cls()
+        circuit.instances = defaultdict(int, data.get("instances", {}))
+
+        def create(sub_cls: type, data: dict[str, Any]):
+            """Wrapper to call from_json on both Component and Subcircuit."""
+            return sub_cls.from_json(json.dumps(data))
+
+        circuit.components = [create(Component, c) for c in data.get("components")]
+        circuit.subcircuits = {
+            name: create(Subckt, c) for name, c in data.get("subcircuits").items()
+        }
+        circuit.nets = data.get("nets", 0)
+        return circuit
 
     def to_graph(
         self,

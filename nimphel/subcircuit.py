@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Union
 
 import nimphel
 
@@ -21,7 +21,13 @@ class Subckt:
       fixed: If True, no more components can be added to the subcircuit.
     """
 
-    def __init__(self, name: str, ports: Ports, params: Optional[Params] = None, letter: Optional[str] = None):
+    def __init__(
+        self,
+        name: str,
+        ports: Ports,
+        params: Optional[Params] = None,
+        letter: Optional[str] = None,
+    ):
         self.name: str = name
         self.letter = letter if letter else self.name[0].upper()
         self.components: List[Component] = []
@@ -93,7 +99,9 @@ class Subckt:
             )
 
         user_params = params if params else {}
-        return Component(ports, {**nil_params, **user_params}, name=self.name, letter=self.letter)
+        return Component(
+            ports, {**nil_params, **user_params}, name=self.name, letter=self.letter
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -106,3 +114,21 @@ class Subckt:
 
     def __str__(self) -> str:
         return json.dumps(self.to_dict())
+
+    @classmethod
+    def from_json(cls, json_str: str) -> Subckt:
+        data = json.loads(json_str)
+        subckt = cls(
+            name=data.get("name"),
+            ports=data.get("ports"),
+            letter=data.get("letter", None),
+            params=data.get("params", None),
+        )
+
+        def make_component(data):
+            return Component.from_json(json.dumps(data))
+
+        subckt.components = [make_component(c) for c in data.get("components", [])]
+        if data.get("fixed", False):
+            subckt.fix()
+        return subckt
