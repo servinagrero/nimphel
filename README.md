@@ -3,6 +3,19 @@
 <h3>Netlist Invention and Manipulation with Python Embedded Language</h3>
 </div>
 
+# Installation
+
+Nimphel can be installed by clonning the repository and then running one of the following commands:
+
+```
+$ pip install .
+$ poetry install
+```
+
+# Usage
+
+For a more in detail documentation of the framework, please take a look at the [documentation](https://servinagrero.github.io/nimphel).
+
 ## License
 
 MIT License
