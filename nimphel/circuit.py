@@ -13,7 +13,7 @@ import networkx as nx
 import numpy as np
 
 from .component import Component, Params, Ports, net
-from .exporter import Exporter, SpectreExporter
+from .exporters import Exporter
 from .subcircuit import Subckt
 
 
@@ -117,7 +117,7 @@ class Circuit:
             "nets": self.nets,
         }
 
-    def __str__(self) -> str:
+    def to_json(self) -> str:
         """Returns the string representation of the component."""
         return json.dumps(self.to_dict())
 

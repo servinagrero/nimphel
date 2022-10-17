@@ -112,7 +112,7 @@ class Subckt:
             "fixed": self.__fixed,
         }
 
-    def __str__(self) -> str:
+    def to_json(self) -> str:
         return json.dumps(self.to_dict())
 
     @classmethod

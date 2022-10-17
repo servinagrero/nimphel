@@ -125,7 +125,7 @@ class Component:
             model=model,
         )
 
-    def __str__(self) -> str:
+    def to_json(self) -> str:
         """Returns the string representation of the component."""
         return json.dumps(self.to_dict())
 
