@@ -1,17 +1,17 @@
-# Welcome to MkDocs
+<figure markdown>
+  ![logo](https://raw.githubusercontent.com/servinagrero/nimphel/gh-pages/img/logo.png){ width="150" }
+</figure>
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
-## Commands
+# Installation
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+!!! note
+    The project will be available on PyPi shortly.
 
-## Project layout
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Nimphel can be installed by running one of the following commands.
+
+```sh
+$ pip install .
+$ poetry install
+```
