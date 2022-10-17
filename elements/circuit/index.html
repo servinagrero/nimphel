@@ -47,32 +47,6 @@
 
     
     
-      
-        <meta  property="og:type"  content="website" >
-      
-        <meta  property="og:title"  content="Circuits - NIMPHEL" >
-      
-        <meta  property="og:description"  content="None" >
-      
-        <meta  property="og:image"  content="assets/images/social/usage/circuit.png" >
-      
-        <meta  property="og:image:type"  content="image/png" >
-      
-        <meta  property="og:image:width"  content="1200" >
-      
-        <meta  property="og:image:height"  content="630" >
-      
-        <meta  property="og:url"  content="None" >
-      
-        <meta  name="twitter:card"  content="summary_large_image" >
-      
-        <meta  name="twitter:title"  content="Circuits - NIMPHEL" >
-      
-        <meta  name="twitter:description"  content="None" >
-      
-        <meta  name="twitter:image"  content="assets/images/social/usage/circuit.png" >
-      
-    
     
   </head>
   
@@ -92,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#circuits" class="md-skip">
+        <a href="#creating-a-subcircuit" class="md-skip">
           Skip to content
         </a>
       
@@ -217,10 +191,34 @@
   
     <li class="md-tabs__item">
       <a href="../component/" class="md-tabs__link md-tabs__link--active">
-        Usage
+        Elements
       </a>
     </li>
   
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../manipulation/" class="md-tabs__link">
+      Manipulation
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../exporting/" class="md-tabs__link">
+      Exporting
+    </a>
+  </li>
 
       
     </ul>
@@ -300,14 +298,14 @@
       
       
         <label class="md-nav__link" for="__nav_2">
-          Usage
+          Elements
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Usage" data-md-level="1">
+      <nav class="md-nav" aria-label="Elements" data-md-level="1">
         <label class="md-nav__title" for="__nav_2">
           <span class="md-nav__icon md-icon"></span>
-          Usage
+          Elements
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -379,15 +377,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#generation-of-a-subcircuit-from-a-circuit" class="md-nav__link">
-    Generation of a subcircuit from a circuit
+  <a href="#global-circuit" class="md-nav__link">
+    Global circuit
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#global-circuit" class="md-nav__link">
-    Global circuit
+  <a href="#dependency-graph" class="md-nav__link">
+    Dependency graph
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#number-of-instances" class="md-nav__link">
+    Number of instances
   </a>
   
 </li>
@@ -401,36 +406,38 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
     <li class="md-nav__item">
-      <a href="../manipulation/" class="md-nav__link">
+      <a href="../../manipulation/" class="md-nav__link">
         Manipulation
       </a>
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
     <li class="md-nav__item">
-      <a href="../exporter/" class="md-nav__link">
-        Exporters
+      <a href="../../exporting/" class="md-nav__link">
+        Exporting
       </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -462,15 +469,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#generation-of-a-subcircuit-from-a-circuit" class="md-nav__link">
-    Generation of a subcircuit from a circuit
+  <a href="#global-circuit" class="md-nav__link">
+    Global circuit
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#global-circuit" class="md-nav__link">
-    Global circuit
+  <a href="#dependency-graph" class="md-nav__link">
+    Dependency graph
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#number-of-instances" class="md-nav__link">
+    Number of instances
   </a>
   
 </li>
@@ -490,15 +504,24 @@
                   
 
 
-<h1 id="circuits">Circuits</h1>
-<h2 id="generation-of-a-subcircuit-from-a-circuit">Generation of a subcircuit from a circuit</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">localnet</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">()</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">localnet</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmos&quot;</span><span class="p">))</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">localnet</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pmos&quot;</span><span class="p">))</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">test</span> <span class="o">=</span> <span class="n">localnet</span><span class="o">.</span><span class="n">into_subckt</span><span class="p">(</span><span class="s2">&quot;TEST_CTK&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;INPUT&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTPUT&quot;</span><span class="p">],</span> <span class="p">{})</span>
+<h1 id="creating-a-subcircuit">Creating a subcircuit</h1>
+<div class="highlight"><span class="filename">Example of creating an AND gate</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">and_gate</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">out_and</span> <span class="o">=</span> <span class="n">net</span><span class="p">()</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pmos&quot;</span><span class="p">))</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pmos&quot;</span><span class="p">))</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">out_and</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmos&quot;</span><span class="p">))</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">out_and</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmos&quot;</span><span class="p">))</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">AND_GATE</span> <span class="o">=</span> <span class="n">and_gate</span><span class="o">.</span><span class="n">into_subckt</span><span class="p">(</span><span class="s2">&quot;AND&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">],</span> <span class="p">{})</span>
 </code></pre></div>
 <h2 id="global-circuit">Global circuit</h2>
 <p>There is a global circuit called <code>netlist</code> that exists within nimphel.</p>
+<h2 id="dependency-graph">Dependency graph</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">graph</span> <span class="o">=</span> <span class="n">netlist</span><span class="o">.</span><span class="n">to_graph</span><span class="p">()</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">generate_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="number-of-instances">Number of instances</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">netlist</span><span class="o">.</span><span class="n">coutn_instances</span><span class="p">()</span>
+</code></pre></div>
 
 
 
@@ -535,7 +558,7 @@
       
       
         
-        <a href="../manipulation/" class="md-footer__link md-footer__link--next" aria-label="Next: Manipulation" rel="next">
+        <a href="../../manipulation/" class="md-footer__link md-footer__link--next" aria-label="Next: Manipulation" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
@@ -572,7 +595,7 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.37e9125f.min.js"></script>

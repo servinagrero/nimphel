@@ -47,32 +47,6 @@
 
     
     
-      
-        <meta  property="og:type"  content="website" >
-      
-        <meta  property="og:title"  content="Introduction" >
-      
-        <meta  property="og:description"  content="None" >
-      
-        <meta  property="og:image"  content="assets/images/social/index.png" >
-      
-        <meta  property="og:image:type"  content="image/png" >
-      
-        <meta  property="og:image:width"  content="1200" >
-      
-        <meta  property="og:image:height"  content="630" >
-      
-        <meta  property="og:url"  content="None" >
-      
-        <meta  name="twitter:card"  content="summary_large_image" >
-      
-        <meta  name="twitter:title"  content="Introduction" >
-      
-        <meta  name="twitter:description"  content="None" >
-      
-        <meta  name="twitter:image"  content="assets/images/social/index.png" >
-      
-    
     
   </head>
   
@@ -92,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#introduction" class="md-skip">
+        <a href="#installation" class="md-skip">
           Skip to content
         </a>
       
@@ -216,11 +190,35 @@
   
   
     <li class="md-tabs__item">
-      <a href="usage/component/" class="md-tabs__link">
-        Usage
+      <a href="elements/component/" class="md-tabs__link">
+        Elements
       </a>
     </li>
   
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="manipulation/" class="md-tabs__link">
+      Manipulation
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="exporting/" class="md-tabs__link">
+      Exporting
+    </a>
+  </li>
 
       
     </ul>
@@ -308,14 +306,14 @@
       
       
         <label class="md-nav__link" for="__nav_2">
-          Usage
+          Elements
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Usage" data-md-level="1">
+      <nav class="md-nav" aria-label="Elements" data-md-level="1">
         <label class="md-nav__title" for="__nav_2">
           <span class="md-nav__icon md-icon"></span>
-          Usage
+          Elements
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -325,7 +323,7 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/component/" class="md-nav__link">
+      <a href="elements/component/" class="md-nav__link">
         Components
       </a>
     </li>
@@ -339,7 +337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/subcircuit/" class="md-nav__link">
+      <a href="elements/subcircuit/" class="md-nav__link">
         Subcircuits
       </a>
     </li>
@@ -353,36 +351,8 @@
   
   
     <li class="md-nav__item">
-      <a href="usage/circuit/" class="md-nav__link">
+      <a href="elements/circuit/" class="md-nav__link">
         Circuits
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="usage/manipulation/" class="md-nav__link">
-        Manipulation
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="usage/exporter/" class="md-nav__link">
-        Exporters
       </a>
     </li>
   
@@ -391,6 +361,36 @@
           
         </ul>
       </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="manipulation/" class="md-nav__link">
+        Manipulation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exporting/" class="md-nav__link">
+        Exporting
+      </a>
     </li>
   
 
@@ -431,9 +431,12 @@
 <figure>
 <p><img alt="logo" src="https://raw.githubusercontent.com/servinagrero/nimphel/gh-pages/img/logo.png" width="150" /></p>
 </figure>
-<h1 id="introduction">Introduction</h1>
-<h1 id="motivation">Motivation</h1>
 <h1 id="installation">Installation</h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The project will be available on PyPi shortly.</p>
+</div>
+<p>Nimphel can be installed by running one of the following commands.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$ pip install .
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>$ poetry install
 </code></pre></div>
@@ -458,7 +461,7 @@
       
       
         
-        <a href="usage/component/" class="md-footer__link md-footer__link--next" aria-label="Next: Components" rel="next">
+        <a href="elements/component/" class="md-footer__link md-footer__link--next" aria-label="Next: Components" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
@@ -495,7 +498,7 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs"], "search": "assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs", "content.code.annotate"], "search": "assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="assets/javascripts/bundle.37e9125f.min.js"></script>
