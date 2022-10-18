@@ -4,6 +4,8 @@ from .circuit import Circuit, create_graph
 from .component import (
     Component,
     Model,
+    models_from_yaml,
+    eldo_to_yaml,
     Net,
     Params,
     ParamValue,

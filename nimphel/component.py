@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import copy
 import json
-from collections import ChainMap
 from dataclasses import asdict, dataclass
 from itertools import repeat
-from typing import Any, Callable, Dict, Iterable, List, Optional, Sized, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
+import yaml
+import re
+from os import PathLike
 
 import numpy as np
 
@@ -38,6 +40,92 @@ class Model:
 
     name: str
     params: Dict[str, ParamValue]
+
+
+def cast_value(val: str) -> Union[int, float, str]:
+    """Cast a string to an int, or float or string.
+
+    The value is casted to int. If it fails it is casted to float and if that fails, the value is returned without modification.
+
+    Args:
+        val: Value we want to cast
+
+    Returns:
+        The value casted to the type.
+    """
+    for t in [int, float]:
+        try:
+            value = t(val)
+            return value
+        except ValueError:
+            pass
+    return val
+
+
+def eldo_to_yaml(lib_path: PathLike, out_path: PathLike):
+    """Convert models from a lib file to a YAML.
+
+    Args:
+        lib_path: Path to the lib file.
+        out_path: Path to the YAML to store the models.
+    """
+    re_subckt = re.compile(r"\.subckt (\w+) .*")
+    models: List[Dict[str, Any]] = []
+
+    with open(lib_path, "r") as f:
+        lines = iter([l.strip() for l in f.readlines()])
+
+    line = next(lines)
+    while lines:
+        while not line.startswith(".subckt"):
+            try:
+                line = next(lines)
+            except StopIteration:
+                with open(out_path, "w+") as f:
+                    f.write(yaml.dump_all(models, Dumper=yaml.Dumper))
+                return
+
+        subckt_name = re_subckt.search(line).group(1)
+        while not line.startswith("+"):
+            line = next(lines)
+
+        param_lines = []
+        while line.startswith("+"):
+            param_lines.append(line[1:].strip())
+            line = next(lines)
+
+        params = {}
+        parameters = " ".join(param_lines)
+        for param in parameters[6:].split(" "):
+            name, value = param.split("=")
+            params[name] = cast_value(value)
+        models.append({"name": subckt_name, "params": params})
+
+
+def models_from_yaml(yaml_path: str) -> Dict[str, Model]:
+    """Create a set of models from a YAML file.
+
+    Multiple models can be defined in the same file by splitting them
+    into different documents.
+
+    Args:
+        yaml_path:
+
+    Returns:
+        Dictionary containing the names and models.
+    """
+    models: Dict[str, Model] = {}
+    with open(yaml_path, "r") as f:
+        for config in yaml.load_all(f, Loader=yaml.Loader):
+            if config["params"].get("from", False):
+                name = config["params"]["from"]
+                new_vals = {k: v for k, v in config["params"].items() if k != "from"}
+                params = {**models[name].params, **new_vals}
+                params = {k: v for k, v in params.items() if v}
+                models[config["name"]] = Model(name, params)
+            else:
+                models[config["name"]] = Model(**config)
+        return models
 
 
 def net() -> int:
@@ -109,6 +197,20 @@ class Component:
     def name(self, name: str):
         """The name is set as a user defined name."""
         self._name[0] = name
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> Component:
+        """Create a component from a Dictionaly."""
+        model = data.get("model", None)
+        if model:
+            model = Model(**model)
+        return cls(
+            data["ports"],
+            params=data.get("params", {}),
+            name=data.get("name", None),
+            letter=data.get("letter", None),
+            model=model,
+        )
 
     @classmethod
     def from_json(cls, json_str: str) -> Component:
