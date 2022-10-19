@@ -19,6 +19,17 @@ netlist.add(Res * 3)
 # (GND, 1), (1, 2), (2, 3)
 ```
 
+A component can also be chained by using a tuple containing the fields `(num components, last net name)` as follows:
+
+```{.py3 title="Chained components with named output"}
+Res = R([GND, net()])
+netlist.add(Res * (3, "OUT"))
+
+# Will produce 3 resistances with the ports:
+# (GND, 1), (1, 2), (2, "OUT")
+```
+
+
 ## Parallel
 
 Components in parallel share the same input and output. The operator ``|`` is used to create components in parallel.
