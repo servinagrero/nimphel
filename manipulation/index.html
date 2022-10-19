@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.5.3">
+      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.6">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.7a952b86.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
@@ -215,8 +215,20 @@
 
 
   <li class="md-tabs__item">
-    <a href="../exporting/" class="md-tabs__link">
-      Exporting
+    <a href="../parsers/" class="md-tabs__link">
+      Parsers
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../exporters/" class="md-tabs__link">
+      Exporters
     </a>
   </li>
 
@@ -481,8 +493,23 @@
   
   
     <li class="md-nav__item">
-      <a href="../exporting/" class="md-nav__link">
-        Exporting
+      <a href="../parsers/" class="md-nav__link">
+        Parsers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exporters/" class="md-nav__link">
+        Exporters
       </a>
     </li>
   
@@ -669,27 +696,29 @@ positions mark the number of ports to chain. A chain will not work in this case 
 <h3 id="getting-ports">Getting ports</h3>
 <h3 id="setting-ports">Setting ports</h3>
 <h2 id="1d-and-2d-arrays">1D and 2D Arrays</h2>
-<p>Components that follow a 1D or 2D configuration can be instanciated quickly by usig the function <code>array</code>. This function takes 3 arguments.</p>
+<p>Components that follow a 1D or 2D configuration can be instanciated quickly by usig the function <code>make_array</code>. This function takes 3 arguments.</p>
 <ul>
 <li>Tuple containing the 1D or 2D dimensions of the array. <strong>The coordinates are given as (Y, X)</strong></li>
 <li>The component instance that will be used to fill the array.</li>
 <li>If provided, a function that will received the coordinates of the component and will return the ports of that component.</li>
 </ul>
-<div class="highlight"><span class="filename">Generating a 1D array of resistances</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">arr</span> <span class="o">=</span> <span class="n">array</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="p">),</span> <span class="n">R</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]),</span> <span class="n">ports_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;X_</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<div class="highlight"><span class="filename">Generating a 1D array of resistances</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">def</span> <span class="nf">ports_res</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;X_</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">GND</span><span class="p">]</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">arr</span> <span class="o">=</span> <span class="n">make_array</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="p">),</span> <span class="n">R</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]),</span> <span class="n">ports_fn</span><span class="o">=</span><span class="n">ports_res</span><span class="p">)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><span class="filename">Generating a 2D array of resistances</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span> <span class="nf">ports_res</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">p</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Y_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;X_</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">arr</span> <span class="o">=</span> <span class="n">array</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">R</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]),</span> <span class="n">ports_fn</span><span class="o">=</span><span class="n">ports_res</span><span class="p">)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
 </code></pre></div>
-<p>The array is created by using numpy, so we have access to numpy tools.
+<p>The array is created by using numpy, so we have access to numpy tools.</p>
 <div class="highlight"><span class="filename">Printing an array of components.</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>     <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
-</code></pre></div></p>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>     <span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+</code></pre></div>
 
 
 
@@ -726,13 +755,13 @@ positions mark the number of ports to chain. A chain will not work in this case 
       
       
         
-        <a href="../exporting/" class="md-footer__link md-footer__link--next" aria-label="Next: Exporting" rel="next">
+        <a href="../parsers/" class="md-footer__link md-footer__link--next" aria-label="Next: Parsers" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Exporting
+              Parsers
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -766,7 +795,7 @@ positions mark the number of ports to chain. A chain will not work in this case 
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.annotate"], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.37e9125f.min.js"></script>
+      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
       
     
   </body>

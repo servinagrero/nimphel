@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.6">
     
     
       
-        <title>Subcircuits - NIMPHEL</title>
+        <title>Exporters - NIMPHEL</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
         
           
           
@@ -41,7 +41,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#creating-a-subcircuit" class="md-skip">
+        <a href="#exporters" class="md-skip">
           Skip to content
         </a>
       
@@ -80,9 +80,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="NIMPHEL" class="md-header__button md-logo" aria-label="NIMPHEL" data-md-component="logo">
+    <a href=".." title="NIMPHEL" class="md-header__button md-logo" aria-label="NIMPHEL" data-md-component="logo">
       
-  <img src="../../img/logo.png" alt="logo">
+  <img src="../img/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Subcircuits
+              Exporters
             
           </span>
         </div>
@@ -173,7 +173,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="../.." class="md-tabs__link">
+    <a href=".." class="md-tabs__link">
       Introduction
     </a>
   </li>
@@ -182,15 +182,13 @@
         
   
   
-    
-  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="../component/" class="md-tabs__link md-tabs__link--active">
+      <a href="../elements/component/" class="md-tabs__link">
         Elements
       </a>
     </li>
@@ -203,7 +201,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="../../manipulation/" class="md-tabs__link">
+    <a href="../manipulation/" class="md-tabs__link">
       Manipulation
     </a>
   </li>
@@ -215,7 +213,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="../../parsers/" class="md-tabs__link">
+    <a href="../parsers/" class="md-tabs__link">
       Parsers
     </a>
   </li>
@@ -224,10 +222,12 @@
         
   
   
+    
+  
 
 
   <li class="md-tabs__item">
-    <a href="../../exporters/" class="md-tabs__link">
+    <a href="./" class="md-tabs__link md-tabs__link--active">
       Exporters
     </a>
   </li>
@@ -254,9 +254,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="NIMPHEL" class="md-nav__button md-logo" aria-label="NIMPHEL" data-md-component="logo">
+    <a href=".." title="NIMPHEL" class="md-nav__button md-logo" aria-label="NIMPHEL" data-md-component="logo">
       
-  <img src="../../img/logo.png" alt="logo">
+  <img src="../img/logo.png" alt="logo">
 
     </a>
     NIMPHEL
@@ -284,7 +284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -297,14 +297,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
       
       
       
@@ -327,7 +325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../component/" class="md-nav__link">
+      <a href="../elements/component/" class="md-nav__link">
         Components
       </a>
     </li>
@@ -339,21 +337,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../elements/subcircuit/" class="md-nav__link">
         Subcircuits
       </a>
-      
     </li>
   
 
@@ -365,7 +353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../circuit/" class="md-nav__link">
+      <a href="../elements/circuit/" class="md-nav__link">
         Circuits
       </a>
     </li>
@@ -387,7 +375,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../manipulation/" class="md-nav__link">
+      <a href="../manipulation/" class="md-nav__link">
         Manipulation
       </a>
     </li>
@@ -402,7 +390,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../parsers/" class="md-nav__link">
+      <a href="../parsers/" class="md-nav__link">
         Parsers
       </a>
     </li>
@@ -415,11 +403,66 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../exporters/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Exporters
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Exporters
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exporting-to-a-netlist" class="md-nav__link">
+    Exporting to a netlist
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-exporter" class="md-nav__link">
+    Custom Exporter
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exporting-models" class="md-nav__link">
+    Exporting models
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -444,6 +487,35 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exporting-to-a-netlist" class="md-nav__link">
+    Exporting to a netlist
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-exporter" class="md-nav__link">
+    Custom Exporter
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exporting-models" class="md-nav__link">
+    Exporting models
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -457,18 +529,47 @@
                   
 
 
-<h1 id="creating-a-subcircuit">Creating a subcircuit</h1>
-<div class="highlight"><span class="filename">Example of creating an inverter</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">INV</span> <span class="o">=</span> <span class="n">Subckt</span><span class="p">(</span><span class="s2">&quot;INV&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">],</span> <span class="p">{})</span>
+<h1 id="exporters">Exporters</h1>
+<p>Exporters allow the generation of a text file based on a series of elements. Their main use is to generate a SPICE netlist from a Circuit. There are however, exporters to save models to files to be loaded later on.</p>
+<h2 id="exporting-to-a-netlist">Exporting to a netlist</h2>
+<p>Any circuit can be exported to a netlist by using the <code>export()</code> method. This method only requires the exporter class.</p>
+<div class="highlight"><span class="filename">Exporting a circuit</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">nimphel.exporters</span> <span class="kn">import</span> <span class="n">Exporter</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">INV</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmos&quot;</span><span class="p">))</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">INV</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pmos&quot;</span><span class="p">))</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">INV</span><span class="o">.</span><span class="n">fix</span><span class="p">()</span> <span class="c1"># Prevents the subcircuit of adding more components</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">netlist</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">Exporter</span><span class="p">)</span>
 </code></pre></div>
-<h1 id="instanciating-a-subcircuit">Instanciating a subcircuit</h1>
-<p>A subcircuit can be instanciated by usig the 'inst()' method. This method takes the same arguments as <code>Component</code>.</p>
-<div class="highlight"><span class="filename">Instanciating an inverter</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">inv</span> <span class="o">=</span> <span class="n">INV</span><span class="o">.</span><span class="n">inst</span><span class="p">([</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">net</span><span class="p">()],</span> <span class="p">{})</span>
+<p>To export directly to a file, use the method <code>export_to_file()</code>.</p>
+<div class="highlight"><span class="filename">Exporting a circuit to a file</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">netlist</span><span class="o">.</span><span class="n">export_to_file</span><span class="p">(</span><span class="s2">&quot;/path/to/file&quot;</span><span class="p">,</span> <span class="n">Exporter</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="custom-exporter">Custom Exporter</h2>
+<p>As of today only the following exporters are implemented: <code>SpectreExporter</code>.</p>
+<p>A custom exporter can be created by implementing the following interface.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>When writing an exporter, it is advised to check if a component implements the <code>fmt()</code> method and use it instead.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span> <span class="nc">Exporter</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="sd">&quot;&quot;&quot;Interface for a Exporter.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="k">def</span> <span class="nf">fmt_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="sd">&quot;&quot;&quot;Format a component instance.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="k">def</span> <span class="nf">fmt_subckt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subcircuit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="sd">&quot;&quot;&quot;Format a subcircuit definition.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="k">def</span> <span class="nf">fmt_net</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="sd">&quot;&quot;&quot;Format a net.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</code></pre></div>
+<h2 id="exporting-models">Exporting models</h2>
+<p>Models can be exported to a YAML file by using the function <code>models_to_yaml()</code>. These models can be read back by using the yaml parser (see <a href="../parsers/">parsers</a>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">models_to_yaml</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="s2">&quot;/path/to/models.yml&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>In the future, custom exporters will be added to resemble the functionality of the parsers.</p>
+</div>
 
 
 
@@ -489,7 +590,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../component/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Components" rel="prev">
+        <a href="../parsers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Parsers" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -498,26 +599,11 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Components
+              Parsers
             </div>
           </div>
         </a>
       
-      
-        
-        <a href="../circuit/" class="md-footer__link md-footer__link--next" aria-label="Next: Circuits" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Circuits
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
       
     </nav>
   
@@ -542,10 +628,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "content.code.annotate"], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
       
     
   </body>
