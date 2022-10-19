@@ -35,7 +35,13 @@ def cast_value(val: str) -> ParamValue:
 
 
 def veriloga_parser(lib: TextIO) -> Dict[str, Model]:
-    """
+    """Parser for verilogA files.
+
+    Args:
+        lib: Path to the lib file.
+
+    Returns:
+        Dictionary containing the models in the file.
     """
     models: Dict[str, Model] = {}
     lines = iter([l.strip() for l in lib.readlines()])
@@ -44,7 +50,7 @@ def veriloga_parser(lib: TextIO) -> Dict[str, Model]:
 
     line = next(lines)
     while lines:
-        while not line.startswith("module"):
+        while not module_re.search(line):
             try:
                 line = next(lines)
             except StopIteration:
@@ -62,11 +68,13 @@ def veriloga_parser(lib: TextIO) -> Dict[str, Model]:
 
 
 def eldo_parser(lib: TextIO) -> Dict[str, Model]:
-    """Convert models from a lib file to a YAML.
+    """Parser for eldo technology files.
 
     Args:
-        lib_path: Path to the lib file.
-        out_path: Path to the YAML to store the models.
+        lib: Path to the lib file.
+
+    Returns:
+        Dictionary containing the models in the file.
     """
     re_subckt = re.compile(r"\.subckt (\w+) .*")
     models: Dict[str, Model] = {}
@@ -75,7 +83,7 @@ def eldo_parser(lib: TextIO) -> Dict[str, Model]:
 
     line = next(lines)
     while lines:
-        while not line.startswith(".subckt"):
+        while not re_subckt.search(line):
             try:
                 line = next(lines)
             except StopIteration:
@@ -100,17 +108,55 @@ def eldo_parser(lib: TextIO) -> Dict[str, Model]:
     return models
 
 
-def yaml_parser(lib: str) -> Dict[str, Model]:
-    """Create a set of models from a YAML file.
-
-    Multiple models can be defined in the same file by splitting them
-    into different documents.
+def spectre_parser(lib: TextIO) -> Dict[str, Model]:
+    """Parser for spectre technology files.
 
     Args:
-        yaml_path:
+        lib: Path to the lib file.
 
     Returns:
-        Dictionary containing the names and models.
+        Dictionary containing the models in the file.
+    """
+    re_subckt = re.compile(r"subckt (\w+) .*")
+    re_param = re.compile(r"\+ (\w+) = (.*)")
+    models: Dict[str, Model] = {}
+
+    lines = iter([l.strip() for l in lib.readlines()])
+
+    line = next(lines)
+    while lines:
+        while not re_subckt.search(line):
+            try:
+                line = next(lines)
+            except StopIteration:
+                return models
+
+        subckt_name = re_subckt.search(line).group(1)
+        while not re_param.search(line):
+            line = next(lines)
+
+        params = {}
+        while not re_param.search(line):
+            line = next(lines)
+
+        while re_param.search(line):
+            name, value = re_param.search(line).groups()
+            params[name] = cast_value(value)
+            line = next(lines)
+
+        models[subckt_name] = Model(subckt_name, params)
+
+    return models
+
+
+def yaml_parser(lib: str) -> Dict[str, Model]:
+    """Parser for YAML files.
+
+    Args:
+        lib: Path to the lib file.
+
+    Returns:
+        Dictionary containing the models in the file.
     """
     models: Dict[str, Model] = {}
     for config in yaml.load_all(lib, Loader=yaml.Loader):
@@ -126,6 +172,13 @@ def yaml_parser(lib: str) -> Dict[str, Model]:
 
 
 def parse_model_file(file_path: PathLike, parser: Parser) -> Dict[str, Model]:
-    """ """
+    """Parse a technology file using the given parser
+    Args:
+        file_path: Path to the technology file.
+        parser: Parser to use in the file.
+
+    Returns:
+        Dictionary containing the models in the file.
+    """
     with open(file_path, "r") as f:
         return parser(f)
