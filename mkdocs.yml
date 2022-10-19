@@ -39,4 +39,5 @@ nav:
         - Subcircuits: elements/subcircuit.md
         - Circuits: elements/circuit.md
     - Manipulation: manipulation.md
-    - Exporting: exporting.md
+    - Parsers: parsers.md
+    - Exporters: exporters.md

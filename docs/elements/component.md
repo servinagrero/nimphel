@@ -54,57 +54,7 @@ class NMosfet(Component):
         super(Mosfet, self).__init__(ports, parameters, model=NMOS, name=name)
 ```
 
-## Models in YAML
-
-Models can be stored in a YAML file. Each document inside the YAML represents a single model.
-
-A different YAML file can be created for a different technology, so that the same netlist can be created with the same code for different technologies just by changing the file.
-
-
-```{.yaml title="Example of a YAML configuration" hl_lines="15"}
-name: NMOS
-params:
-    w: 0.135
-    nfing: 1
-    mult: 1
-    srcefirst: 1
-    ngcon: 1
-    mismatch: 1
-    lpe: 0
-    dnoise_mdev: 0
-    dmu_mdev: 0
-    dvt_mdev: 0
-    numcos: 1
-    numcod: 1
----
-name: PMOS
-params:
-    from: NMOS # Use the parameters of NMOS
-    w: 0.27 # Parameters can be updated
-    new_val: 42 # New parameters can be added
-    mismatch: ~ # Values can also be deleted
-```
-
-The function ``models_from_yaml()`` creates a dictionary with the models from the YAML file.
-
-```{.py3}
-models = models_from_yaml("/path/to/models.yml")
-
-@simple_component
-class NMosfet(Component):
-    model = models['NMOS']
-```
-
-To automatically convert an Eldo library file to a YAML containing the subcircuits definitions, use the function ``eldo_to_yaml()``
-
-```{.py3}
-eldo_to_yaml("/path/to/eldo.lib", "/path/to/models.yml")
-```
-
-!!! info
-
-    As of today, only Eldo library files can be parsed. Parsers for other simulators will be added in the future.
-
+To see more about generating and storing models, please see [parsers](../parsers.md) and [exporters](../exporters.md)
 
 # Serialization and deserialization
 

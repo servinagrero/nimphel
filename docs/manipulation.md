@@ -109,7 +109,7 @@ m.direct((1, 1, 0, 0), 3)
 
 ## 1D and 2D Arrays
 
-Components that follow a 1D or 2D configuration can be instanciated quickly by usig the function ``array``. This function takes 3 arguments.
+Components that follow a 1D or 2D configuration can be instanciated quickly by usig the function ``make_array``. This function takes 3 arguments.
 
 - Tuple containing the 1D or 2D dimensions of the array. **The coordinates are given as (Y, X)**
 - The component instance that will be used to fill the array.
@@ -117,10 +117,12 @@ Components that follow a 1D or 2D configuration can be instanciated quickly by u
 
 
 ```{.py3 title="Generating a 1D array of resistances"}
-arr = array((5, ), R(["", ""]), ports_fn=lambda c: [f'X_{c[0]}'])
-netlist.add(m)
+def ports_res(p):
+    return [f'X_{c[0]}', GND]
+    
+arr = make_array((5, ), R(["", ""]), ports_fn=ports_res)
+netlist.add(arr)
 ```
-
 
 ```{.py3 title="Generating a 2D array of resistances"}
 def ports_res(p):
@@ -128,12 +130,12 @@ def ports_res(p):
     return [f"Y_{y}", f"X_{x}"]
 
 arr = array((3, 5), R(["", ""]), ports_fn=ports_res)
-
-netlist.add(m)
+netlist.add(arr)
 ```
 
 The array is created by using numpy, so we have access to numpy tools.
+
 ```{.py3 title="Printing an array of components."}
 for y, x in np.ndindex(m.shape):
-     print(m[y, x])
+     print(arr[y, x])
 ```
