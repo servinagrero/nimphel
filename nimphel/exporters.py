@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+from os import PathLike
 from typing import Callable, Dict, List, Optional, Tuple, Union
+
+import yaml
+
+from nimphel.component import Model
 
 
 class Exporter:
@@ -65,3 +70,14 @@ class SpectreExporter(Exporter):
         if isinstance(net, int):
             return f"net{net}"
         return net
+
+
+def models_to_yaml(models: Dict[str, Model], out_path: PathLike):
+    """
+    Args:
+    models:
+    out_path:
+    """
+    data = [{"name": name, "params": model.params} for name, model in models.items()]
+    with open(out_path, "w+") as f:
+        f.write(yaml.dump_all(data, Dumper=yaml.Dumper))

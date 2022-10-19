@@ -7,11 +7,6 @@ import json
 from dataclasses import asdict, dataclass
 from itertools import repeat
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
-import yaml
-import re
-from os import PathLike
-
-import numpy as np
 
 import nimphel
 
@@ -40,92 +35,6 @@ class Model:
 
     name: str
     params: Dict[str, ParamValue]
-
-
-def cast_value(val: str) -> Union[int, float, str]:
-    """Cast a string to an int, or float or string.
-
-    The value is casted to int. If it fails it is casted to float and if that fails, the value is returned without modification.
-
-    Args:
-        val: Value we want to cast
-
-    Returns:
-        The value casted to the type.
-    """
-    for t in [int, float]:
-        try:
-            value = t(val)
-            return value
-        except ValueError:
-            pass
-    return val
-
-
-def eldo_to_yaml(lib_path: PathLike, out_path: PathLike):
-    """Convert models from a lib file to a YAML.
-
-    Args:
-        lib_path: Path to the lib file.
-        out_path: Path to the YAML to store the models.
-    """
-    re_subckt = re.compile(r"\.subckt (\w+) .*")
-    models: List[Dict[str, Any]] = []
-
-    with open(lib_path, "r") as f:
-        lines = iter([l.strip() for l in f.readlines()])
-
-    line = next(lines)
-    while lines:
-        while not line.startswith(".subckt"):
-            try:
-                line = next(lines)
-            except StopIteration:
-                with open(out_path, "w+") as f:
-                    f.write(yaml.dump_all(models, Dumper=yaml.Dumper))
-                return
-
-        subckt_name = re_subckt.search(line).group(1)
-        while not line.startswith("+"):
-            line = next(lines)
-
-        param_lines = []
-        while line.startswith("+"):
-            param_lines.append(line[1:].strip())
-            line = next(lines)
-
-        params = {}
-        parameters = " ".join(param_lines)
-        for param in parameters[6:].split(" "):
-            name, value = param.split("=")
-            params[name] = cast_value(value)
-        models.append({"name": subckt_name, "params": params})
-
-
-def models_from_yaml(yaml_path: str) -> Dict[str, Model]:
-    """Create a set of models from a YAML file.
-
-    Multiple models can be defined in the same file by splitting them
-    into different documents.
-
-    Args:
-        yaml_path:
-
-    Returns:
-        Dictionary containing the names and models.
-    """
-    models: Dict[str, Model] = {}
-    with open(yaml_path, "r") as f:
-        for config in yaml.load_all(f, Loader=yaml.Loader):
-            if config["params"].get("from", False):
-                name = config["params"]["from"]
-                new_vals = {k: v for k, v in config["params"].items() if k != "from"}
-                params = {**models[name].params, **new_vals}
-                params = {k: v for k, v in params.items() if v}
-                models[config["name"]] = Model(name, params)
-            else:
-                models[config["name"]] = Model(**config)
-        return models
 
 
 def net() -> int:
@@ -182,7 +91,11 @@ class Component:
         nimphel.netlist.instances[self.name] += 1
 
         self.model = model
-        self.params = params if params else {}
+        user_params = params if params else {}
+        if model:
+            self.params = {**model.params, **user_params}
+        else:
+            self.params = user_params
 
     @property
     def name(self) -> str:
@@ -472,138 +385,3 @@ def simple_component(cls):
 
     setattr(cls, "__init__", init)
     return cls
-
-
-def get_port(
-    comp: Component, mask: Tuple[Net, ...], flatten: bool = False
-) -> Tuple[Net, ...]:
-    """Get a port from a component given a mask.
-
-    This function serves as a helper for ``port_getter``.
-
-    Example:
-
-        Given a component with ports [in, out, VDD] and a mask (1, 0, 0), get_port will return (in, 0, 0). If flatten is True, the result would be (in,).
-
-    Args:
-        comp: Component to obtain the ports from.
-        mask: Mask to select the ports to obtain.
-        flatten: If True, reduce the ports to only the selected ones.
-
-    Returns:
-        The tuple containing the ports selected.
-    """
-    res = map(lambda pair: pair[1] if pair[0] else 0, zip(mask, comp.ports))
-    if flatten:
-        return tuple(filter(bool, res))
-    return tuple(res)
-
-
-def port_getter(
-    comps: Union[Component, Iterable[Component]],
-    mask: Tuple[Net, ...],
-    flatten: bool = False,
-) -> Union[Tuple[Net, ...], List[Tuple[Net, ...]]]:
-    """Obtain the ports of a list of components based on a mask.
-
-    This functions automatically maps the function get_port if comps is a list of components. See ``get_port`` to understand how to use the mask.
-
-    Args:
-        mask: Tuple containing the ports to obtain.
-        comps: Component or list of components.
-        flatten: If True, return only the ports requested.
-
-    Returns:
-       List of tuples of ports.
-    """
-    if isinstance(comps, Iterable):
-        ports = map(lambda comp: get_port(comp, mask, flatten), comps)
-        return list(ports)
-    return get_port(comps, mask, flatten)
-
-
-def set_port(comp: Component, mask: Optional[Tuple[Net, ...]] = None):
-    """Modify the ports of a component given a mask.
-
-    The mask is a tuple containing 0 or a string:
-
-        * 0 to keep the original value.
-        * A string denoting the new port name.
-
-    This functions serves as a helper for ``port_setter``.
-
-    Example:
-        Given a component with ports [vdd, in, out, gnd] and a mask ("INPUT", 0, 0, "OUT"), the ports of the component will be changed to [INPUT, in, out, OUT]
-
-    Args:
-        comp: Component to modify.
-        mask: Optional mask of ports to modify. If mask is None, do nothing.
-
-    Raises:
-        ValueError: The mask length is not equal to the number of ports..
-    """
-    if mask and len(mask) != len(comp.ports):
-        raise ValueError("Wrong mask given")
-
-    if mask:
-        comp.ports = list(map(lambda p: p[0] or p[1], zip(mask, comp.ports)))
-
-
-def port_setter(
-    comps: Union[Component, Iterable[Component]],
-    mask: Optional[Union[List[Tuple[Net, ...]], Tuple[Net, ...]]] = None,
-):
-    """Modify the ports of a component or list of components given a mask.
-
-    Args:
-      comp: Component or list of components.
-      mask: Mask of ports to change.
-
-    Raises:
-      ValueError: When a single component is given but a list of masks is supplied.
-      ValueError: When the number of masks does not match the number of components.
-    """
-
-    if isinstance(comps, Component):
-        if mask and isinstance(mask, Iterable):
-            raise ValueError("Mask needs to be a single tuple.")
-        set_port(comps, mask)
-    else:
-        if mask is None:
-            list(map(set_port, comps, repeat(mask)))
-        elif mask and len(comps) != len(mask):
-            raise ValueError("Components and mask need to be the same length")
-        else:
-            list(map(set_port, comps, mask))
-
-
-def array(
-    size: Tuple[int, ...],
-    comp: Component,
-    ports_fn: Optional[Callable[[Coords], List[Net]]] = None,
-) -> np.ndarray:
-    """Create a 1D or 2D array of components.
-
-    To modify the ports of each component upon creation, the parameters `ports_fn` can be used. This functions accepts the coordinates of the component as a tuple and should return a list containing the ports of the component. If `ports_fn` is None, the ports are the same as the ones in `comp`.
-
-    Args:
-        size: Tuple containing (y,x) or (x,) dimensions.
-        comp: Component instance to create the array.
-        ports_fn: Function to assign the ports. The function accepts just a tuple containing the coordinates of the component in the array.
-
-    Returns:
-       The array with the component instances.
-    """
-
-    arr = np.zeros(size, dtype=Component)
-    if ports_fn is None:
-        ports_fn = lambda c: comp.ports
-
-    last_comp = comp
-    for coord in np.ndindex(arr.shape):
-        new_comp = +last_comp
-        new_comp.ports = ports_fn(tuple(coord))
-        arr[coord] = new_comp
-        last_comp = new_comp
-
-    return arr

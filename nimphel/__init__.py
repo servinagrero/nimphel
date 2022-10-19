@@ -1,24 +1,8 @@
 #!/usr/bin/env python3
 
-from .circuit import Circuit, create_graph
-from .component import (
-    Component,
-    Model,
-    models_from_yaml,
-    eldo_to_yaml,
-    Net,
-    Params,
-    ParamValue,
-    Ports,
-    array,
-    net,
-    port_getter,
-    port_setter,
-    simple_component,
-)
+from . import component, exporters, parsers
+from . import circuit
+from . import subcircuit
 
-from . import exporters
-from .subcircuit import Subckt
-
-#: Global state
-netlist = Circuit()
+# Global circuit to act as the full netlist
+netlist = circuit.Circuit()
