@@ -35,10 +35,12 @@ def cast_value(val: str) -> ParamValue:
 
 
 def veriloga_parser(lib: TextIO) -> Dict[str, Model]:
-    """ """
+    """
+    """
     models: Dict[str, Model] = {}
     lines = iter([l.strip() for l in lib.readlines()])
     param_re = re.compile(r".*parameter \w+ (\w+) = (.*);")
+    module_re = re.compile(r".*module (\w+) .*;")
 
     line = next(lines)
     while lines:
@@ -48,7 +50,7 @@ def veriloga_parser(lib: TextIO) -> Dict[str, Model]:
             except StopIteration:
                 return models
 
-        module_name = line.split(" ")[1]
+        module_name = module_re.search(line).group(1)
         params = {}
         while not line.startswith("analog begin"):
             line = next(lines)
