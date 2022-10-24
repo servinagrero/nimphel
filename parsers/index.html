@@ -41,6 +41,8 @@
       
     
     
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -229,6 +231,18 @@
   <li class="md-tabs__item">
     <a href="../exporters/" class="md-tabs__link">
       Exporters
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../api/" class="md-tabs__link">
+      API Reference
     </a>
   </li>
 
@@ -453,6 +467,21 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -505,7 +534,7 @@
 <p>Parsers allow the generation of models automatically from files. Nimphel comes with some parsers by default. If some technology file is not supported file it's very easy to create your custom parser.</p>
 <p>Parsing a definition file requires two things.</p>
 <ul>
-<li>The function <code>parse_model_file()</code></li>
+<li>The function <a class="autorefs autorefs-internal" href="../api/#nimphel.parsers.parse_model_file"><code>parse_model_file</code></a></li>
 <li>The parser that will be used for the file.</li>
 </ul>
 <p>The parser has the signature <code class="highlight"><span class="k">def</span> <span class="nf">parser</span><span class="p">(</span><span class="n">lib</span><span class="p">:</span> <span class="n">TextIO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]</span></code></p>
@@ -515,13 +544,13 @@
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span> <span class="nc">NMosfet</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;NMOS&#39;</span><span class="p">]</span>
 </code></pre></div>
-<p>As of today the following parsers are implemented: <code>eldo_parser()</code>, <code>veriloga_parser()</code>, <code>yaml_parser()</code>.</p>
+<p>As of today the following parsers are implemented: <a class="autorefs autorefs-internal" href="../api/#nimphel.parsers.eldo_parser"><code>eldo_parser</code></a>, <a class="autorefs autorefs-internal" href="../api/#nimphel.parsers.veriloga_parser"><code>veriloga_parser</code></a>, <a class="autorefs autorefs-internal" href="../api/#nimphel.parsers.yaml_parser"><code>yaml_parser</code></a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>More parsers may be added in the future. The current parsers can be used as a refernce to create a custom parser.</p>
 </div>
 <h2 id="models-in-yaml">Models in YAML</h2>
-<p>The <code>yaml_parser()</code> allows reading models from a YAML file. Each document inside the file represents a single model.</p>
+<p>The <a class="autorefs autorefs-internal" href="../api/#nimphel.parsers.yaml_parser"><code>yaml_parser</code></a> allows reading models from a YAML file. Each document inside the file represents a single model.</p>
 <p>A different YAML file can be created for a different technology, so that the same netlist can be created with the same code for different technologies just by changing the file.</p>
 <div class="highlight"><span class="filename">Example of a YAML configuration</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NMOS</span><span class="w"></span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">params</span><span class="p">:</span><span class="w"></span>

@@ -41,6 +41,8 @@
       
     
     
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -229,6 +231,18 @@
   <li class="md-tabs__item">
     <a href="./" class="md-tabs__link md-tabs__link--active">
       Exporters
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../api/" class="md-tabs__link">
+      API Reference
     </a>
   </li>
 
@@ -467,6 +481,21 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -532,16 +561,16 @@
 <h1 id="exporters">Exporters</h1>
 <p>Exporters allow the generation of a text file based on a series of elements. Their main use is to generate a SPICE netlist from a Circuit. There are however, exporters to save models to files to be loaded later on.</p>
 <h2 id="exporting-to-a-netlist">Exporting to a netlist</h2>
-<p>Any circuit can be exported to a netlist by using the <code>export()</code> method. This method only requires the exporter class.</p>
+<p>Any circuit can be exported to a netlist by using the <a class="autorefs autorefs-internal" href="../api/#nimphel.circuit.Circuit.export"><code>export</code></a> method. This method only requires the exporter class.</p>
 <div class="highlight"><span class="filename">Exporting a circuit</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">nimphel.exporters</span> <span class="kn">import</span> <span class="n">Exporter</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">netlist</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">Exporter</span><span class="p">)</span>
 </code></pre></div>
-<p>To export directly to a file, use the method <code>export_to_file()</code>.</p>
+<p>To export directly to a file, use the method <a class="autorefs autorefs-internal" href="../api/#nimphel.circuit.Circuit.export_to_file"><code>export_to_file</code></a>.</p>
 <div class="highlight"><span class="filename">Exporting a circuit to a file</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">netlist</span><span class="o">.</span><span class="n">export_to_file</span><span class="p">(</span><span class="s2">&quot;/path/to/file&quot;</span><span class="p">,</span> <span class="n">Exporter</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="custom-exporter">Custom Exporter</h2>
-<p>As of today only the following exporters are implemented: <code>SpectreExporter</code>.</p>
+<p>As of today only the following exporters are implemented: <a class="autorefs autorefs-internal" href="../api/#nimphel.exporters.SpectreExporter"><code>SpectreExporter</code></a>.</p>
 <p>A custom exporter can be created by implementing the following interface.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -563,7 +592,7 @@
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 </code></pre></div>
 <h2 id="exporting-models">Exporting models</h2>
-<p>Models can be exported to a YAML file by using the function <code>models_to_yaml()</code>. These models can be read back by using the yaml parser (see <a href="../parsers/">parsers</a>).</p>
+<p>Models can be exported to a YAML file by using the function <a class="autorefs autorefs-internal" href="../api/#nimphel.exporters.models_to_yaml"><code>models_to_yaml</code></a>. These models can be read back by using the yaml parser (see <a href="../parsers/">parsers</a>).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">models_to_yaml</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="s2">&quot;/path/to/models.yml&quot;</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition info">
@@ -604,6 +633,21 @@
           </div>
         </a>
       
+      
+        
+        <a href="../api/" class="md-footer__link md-footer__link--next" aria-label="Next: API Reference" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              API Reference
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
       
     </nav>
   

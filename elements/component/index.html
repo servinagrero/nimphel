@@ -41,6 +41,8 @@
       
     
     
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -229,6 +231,18 @@
   <li class="md-tabs__item">
     <a href="../../exporters/" class="md-tabs__link">
       Exporters
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../api/" class="md-tabs__link">
+      API Reference
     </a>
   </li>
 
@@ -455,6 +469,21 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        API Reference
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -519,7 +548,7 @@
 </code></pre></div>
 <p>A component may implement an additional method called <code>fmt()</code>. This method accepts no argument and should return the string representation of the component.</p>
 <h2 id="wrapper-for-simple-components">Wrapper for simple components</h2>
-<p>The process of creating multiple simple components can be tedious. The wrapper <code>@simple_component</code> allows to create components similarly to a dataclass.</p>
+<p>The process of creating multiple simple components can be tedious. The wrapper <a class="autorefs autorefs-internal" href="../../api/#nimphel.component.simple_component"><code>@simple_component</code></a> allows to create components similarly to a dataclass.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@simple_component</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;Capacitor&quot;</span>
@@ -547,7 +576,7 @@
 </span></code></pre></div>
 <p>To see more about generating and storing models, please see <a href="../../parsers/">parsers</a> and <a href="../../exporters/">exporters</a></p>
 <h1 id="serialization-and-deserialization">Serialization and deserialization</h1>
-<p>Components can be serialized to a dict by using the <code>to_dict()</code> method. To serialize to JSON, use the <code>to_json()</code> method.</p>
+<p>Components can be serialized to a dict by using the <a class="autorefs autorefs-internal" href="../../api/#nimphel.component.Component.to_dict"><code>to_dict</code></a> method. To serialize to JSON, use the <a class="autorefs autorefs-internal" href="../../api/#nimphel.component.Component.to_json"><code>to_json</code></a> method.</p>
 <div class="highlight"><span class="filename">Example of serializing and deserialization</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">mosfet</span> <span class="o">=</span> <span class="n">NMosfet</span><span class="p">([</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">VDD</span><span class="p">])</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">data</span> <span class="o">=</span> <span class="n">mosfet</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
