@@ -19,7 +19,7 @@ A component may implement an additional method called `fmt()`. This method accep
 
 ## Wrapper for simple components
 
-The process of creating multiple simple components can be tedious. The wrapper ``@simple_component`` allows to create components similarly to a dataclass.
+The process of creating multiple simple components can be tedious. The wrapper [`@simple_component`][nimphel.component.simple_component] allows to create components similarly to a dataclass.
 
 ```python
 @simple_component
@@ -58,7 +58,7 @@ To see more about generating and storing models, please see [parsers](../parsers
 
 # Serialization and deserialization
 
-Components can be serialized to a dict by using the ``to_dict()`` method. To serialize to JSON, use the ``to_json()`` method.
+Components can be serialized to a dict by using the [`to_dict`][nimphel.component.Component.to_dict] method. To serialize to JSON, use the [`to_json`][nimphel.component.Component.to_json] method.
 
 ```{.py3 title="Example of serializing and deserialization"}
 mosfet = NMosfet(["in", "out", GND, VDD])

@@ -19,7 +19,9 @@ theme:
 
 plugins:
   - search
-  
+  - autorefs
+  - mkdocstrings
+
 markdown_extensions:
   - attr_list
   - md_in_html
@@ -41,3 +43,5 @@ nav:
     - Manipulation: manipulation.md
     - Parsers: parsers.md
     - Exporters: exporters.md
+    - API Reference: api.md  
+

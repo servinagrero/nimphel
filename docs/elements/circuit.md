@@ -12,7 +12,7 @@ AND_GATE = and_gate.into_subckt("AND", ["A", "B", "OUT"], {})
 
 ## Global circuit
 
-There is a global circuit called `netlist` that exists within nimphel.
+There is a global circuit called ``netlist`` that exists within nimphel.
 
 
 ## Dependency graph
@@ -25,6 +25,6 @@ generate_graph(graph)
 ## Number of instances
 
 ```python
-netlist.coutn_instances()
+netlist.count_instances()
 ```
 

@@ -5,7 +5,7 @@ Exporters allow the generation of a text file based on a series of elements. The
 
 ## Exporting to a netlist
 
-Any circuit can be exported to a netlist by using the ``export()`` method. This method only requires the exporter class.
+Any circuit can be exported to a netlist by using the [`export`][nimphel.circuit.Circuit.export] method. This method only requires the exporter class.
 
 ```{.py3 title="Exporting a circuit"}
 from nimphel.exporters import Exporter
@@ -13,7 +13,7 @@ from nimphel.exporters import Exporter
 netlist.export(Exporter)
 ```
 
-To export directly to a file, use the method ``export_to_file()``.
+To export directly to a file, use the method [`export_to_file`][nimphel.circuit.Circuit.export_to_file].
 
 ```{.py3 title="Exporting a circuit to a file"}
 netlist.export_to_file("/path/to/file", Exporter)
@@ -21,7 +21,7 @@ netlist.export_to_file("/path/to/file", Exporter)
 
 ## Custom Exporter
 
-As of today only the following exporters are implemented: ``SpectreExporter``.
+As of today only the following exporters are implemented: [`SpectreExporter`][nimphel.exporters.SpectreExporter].
 
 A custom exporter can be created by implementing the following interface.
 
@@ -47,7 +47,7 @@ class Exporter:
 
 ## Exporting models
 
-Models can be exported to a YAML file by using the function ``models_to_yaml()``. These models can be read back by using the yaml parser (see [parsers](parsers.md)).
+Models can be exported to a YAML file by using the function [`models_to_yaml`][nimphel.exporters.models_to_yaml]. These models can be read back by using the yaml parser (see [parsers](parsers.md)).
 
 ```{.py3}
 models_to_yaml(models, "/path/to/models.yml")

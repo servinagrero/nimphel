@@ -4,7 +4,7 @@ Parsers allow the generation of models automatically from files. Nimphel comes w
 
 Parsing a definition file requires two things.
 
-- The function ``parse_model_file()``
+- The function [`parse_model_file`][nimphel.parsers.parse_model_file]
 - The parser that will be used for the file.
 
 The parser has the signature `#!python def parser(lib: TextIO) -> Dict[str, Model]`
@@ -17,7 +17,7 @@ class NMosfet(Component):
     model = models['NMOS']
 ```
 
-As of today the following parsers are implemented: ``eldo_parser()``, ``veriloga_parser()``, ``yaml_parser()``.
+As of today the following parsers are implemented: [`eldo_parser`][nimphel.parsers.eldo_parser], [`veriloga_parser`][nimphel.parsers.veriloga_parser], [`yaml_parser`][nimphel.parsers.yaml_parser].
 
 !!! info
 
@@ -26,7 +26,7 @@ As of today the following parsers are implemented: ``eldo_parser()``, ``veriloga
 
 ## Models in YAML
 
-The ``yaml_parser()`` allows reading models from a YAML file. Each document inside the file represents a single model.
+The [`yaml_parser`][nimphel.parsers.yaml_parser] allows reading models from a YAML file. Each document inside the file represents a single model.
 
 A different YAML file can be created for a different technology, so that the same netlist can be created with the same code for different technologies just by changing the file.
 
