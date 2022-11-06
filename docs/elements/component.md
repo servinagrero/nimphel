@@ -1,4 +1,6 @@
-# Creation of components
+A [`component`][nimphel.component.Component] is the most basic unit inside a circuit. It defines single units inside a circuit like resistors, capacitors, transistors or even custom components.
+
+## Creation of components
 
 ```{.py3 title="Creation of a simple Resistance"}
 class R(Component):
@@ -17,7 +19,7 @@ class R(Component):
 
 A component may implement an additional method called `fmt()`. This method accepts no argument and should return the string representation of the component.
 
-## Wrapper for simple components
+### Wrapper for simple components
 
 The process of creating multiple simple components can be tedious. The wrapper [`@simple_component`][nimphel.component.simple_component] allows to create components similarly to a dataclass.
 
@@ -29,7 +31,7 @@ class C(Component):
     defaults: Params = {"C": 1e3, "T": None}
 ```
 
-# Component models
+## Component models
 
 A model allows to reuse a component name and a set of parameters across multiple definitions.
 
@@ -56,7 +58,7 @@ class NMosfet(Component):
 
 To see more about generating and storing models, please see [parsers](../parsers.md) and [exporters](../exporters.md)
 
-# Serialization and deserialization
+## Serialization and deserialization
 
 Components can be serialized to a dict by using the [`to_dict`][nimphel.component.Component.to_dict] method. To serialize to JSON, use the [`to_json`][nimphel.component.Component.to_json] method.
 

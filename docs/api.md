@@ -7,3 +7,5 @@
 ## ::: nimphel.parsers
 
 ## ::: nimphel.exporters
+
+## ::: nimphel.utils
