@@ -347,8 +347,6 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           Components
@@ -365,8 +363,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -375,8 +371,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#creation-of-components" class="md-nav__link">
+    Creation of components
+  </a>
+  
+    <nav class="md-nav" aria-label="Creation of components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#wrapper-for-simple-components" class="md-nav__link">
     Wrapper for simple components
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-models" class="md-nav__link">
+    Component models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serialization-and-deserialization" class="md-nav__link">
+    Serialization and deserialization
   </a>
   
 </li>
@@ -501,8 +524,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -511,8 +532,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#creation-of-components" class="md-nav__link">
+    Creation of components
+  </a>
+  
+    <nav class="md-nav" aria-label="Creation of components">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#wrapper-for-simple-components" class="md-nav__link">
     Wrapper for simple components
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-models" class="md-nav__link">
+    Component models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serialization-and-deserialization" class="md-nav__link">
+    Serialization and deserialization
   </a>
   
 </li>
@@ -532,7 +580,10 @@
                   
 
 
-<h1 id="creation-of-components">Creation of components</h1>
+  <h1>Components</h1>
+
+<p>A <a class="autorefs autorefs-internal" href="../../api/#nimphel.component.Component"><code>component</code></a> is the most basic unit inside a circuit. It defines single units inside a circuit like resistors, capacitors, transistors or even custom components.</p>
+<h2 id="creation-of-components">Creation of components</h2>
 <div class="highlight"><span class="filename">Creation of a simple Resistance</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">class</span> <span class="nc">R</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ports</span> <span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="n">defaults</span><span class="p">:</span> <span class="n">Params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">}</span>
@@ -547,7 +598,7 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;R</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_id</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">ports</span><span class="si">}</span><span class="s1">) R </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
 </code></pre></div>
 <p>A component may implement an additional method called <code>fmt()</code>. This method accepts no argument and should return the string representation of the component.</p>
-<h2 id="wrapper-for-simple-components">Wrapper for simple components</h2>
+<h3 id="wrapper-for-simple-components">Wrapper for simple components</h3>
 <p>The process of creating multiple simple components can be tedious. The wrapper <a class="autorefs autorefs-internal" href="../../api/#nimphel.component.simple_component"><code>@simple_component</code></a> allows to create components similarly to a dataclass.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@simple_component</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
@@ -555,7 +606,7 @@
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">letter</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">defaults</span><span class="p">:</span> <span class="n">Params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
 </code></pre></div>
-<h1 id="component-models">Component models</h1>
+<h2 id="component-models">Component models</h2>
 <p>A model allows to reuse a component name and a set of parameters across multiple definitions.</p>
 <div class="highlight"><span class="filename">Creation of a NMOS model</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">NMOS</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmosfet&quot;</span><span class="p">,</span>
@@ -575,7 +626,7 @@
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="hll">        <span class="nb">super</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ports</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">NMOS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 </span></code></pre></div>
 <p>To see more about generating and storing models, please see <a href="../../parsers/">parsers</a> and <a href="../../exporters/">exporters</a></p>
-<h1 id="serialization-and-deserialization">Serialization and deserialization</h1>
+<h2 id="serialization-and-deserialization">Serialization and deserialization</h2>
 <p>Components can be serialized to a dict by using the <a class="autorefs autorefs-internal" href="../../api/#nimphel.component.Component.to_dict"><code>to_dict</code></a> method. To serialize to JSON, use the <a class="autorefs autorefs-internal" href="../../api/#nimphel.component.Component.to_json"><code>to_json</code></a> method.</p>
 <div class="highlight"><span class="filename">Example of serializing and deserialization</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">mosfet</span> <span class="o">=</span> <span class="n">NMosfet</span><span class="p">([</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">VDD</span><span class="p">])</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>

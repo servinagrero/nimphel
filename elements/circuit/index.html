@@ -375,8 +375,6 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           Circuits
@@ -393,8 +391,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -403,9 +399,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#creating-a-subcircuit" class="md-nav__link">
+    Creating a subcircuit
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating a subcircuit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#global-circuit" class="md-nav__link">
     Global circuit
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -515,8 +524,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -525,9 +532,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#creating-a-subcircuit" class="md-nav__link">
+    Creating a subcircuit
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating a subcircuit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#global-circuit" class="md-nav__link">
     Global circuit
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -560,7 +580,12 @@
                   
 
 
-<h1 id="creating-a-subcircuit">Creating a subcircuit</h1>
+  <h1>Circuits</h1>
+
+<p>A <a class="autorefs autorefs-internal" href="../../api/#nimphel.circuit.Circuit"><code>circuit</code></a> is a top level object. It allows the aggregation of multiple components.</p>
+<p>The main difference between a subcircuit and a circuit is that the circuit also holds the definition of the subcircuits it contains.</p>
+<h2 id="creating-a-subcircuit">Creating a subcircuit</h2>
+<p>A circuit can be converted into a subcircuit by using the <a class="autorefs autorefs-internal" href="../../api/#nimphel.circuit.Circuit.into_subckt"><code>into_subckt</code></a> method.</p>
 <div class="highlight"><span class="filename">Example of creating an AND gate</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">and_gate</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">()</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">out_and</span> <span class="o">=</span> <span class="n">net</span><span class="p">()</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pmos&quot;</span><span class="p">))</span>
@@ -568,15 +593,24 @@
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">out_and</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmos&quot;</span><span class="p">))</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">out_and</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmos&quot;</span><span class="p">))</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">AND_GATE</span> <span class="o">=</span> <span class="n">and_gate</span><span class="o">.</span><span class="n">into_subckt</span><span class="p">(</span><span class="s2">&quot;AND&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">],</span> <span class="p">{})</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Now we can create instances of AND_GATE</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># gate = AND_GATE.inst([net(), net(), net()], {})</span>
 </code></pre></div>
-<h2 id="global-circuit">Global circuit</h2>
-<p>There is a global circuit called <code>netlist</code> that exists within nimphel.</p>
+<h3 id="global-circuit">Global circuit</h3>
+<p>There is a global circuit called <code>netlist</code> that exists within nimphel. This circuit behaves as the main SPICE netlist. <strong>Component ids always refer to the global netlist.</strong></p>
 <h2 id="dependency-graph">Dependency graph</h2>
+<p>A dependency graph holds the different subcircuits and components that make up a circuit and the relationships between them.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">graph</span> <span class="o">=</span> <span class="n">netlist</span><span class="o">.</span><span class="n">to_graph</span><span class="p">()</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">generate_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># To view the graph we need to import some libraries</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="number-of-instances">Number of instances</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">netlist</span><span class="o">.</span><span class="n">count_instances</span><span class="p">()</span>
+<p>With the method <a class="autorefs autorefs-internal" href="../../api/#nimphel.circuit.Circuit.count_instances"><code>count_intances</code></a> we can obtain a dictionary containing the names of all components instanciated in a circuit and their total number. This number is calculated from the dependency graph.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">instances</span> <span class="o">=</span> <span class="n">netlist</span><span class="o">.</span><span class="n">count_instances</span><span class="p">()</span>
 </code></pre></div>
 
 

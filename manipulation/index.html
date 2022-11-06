@@ -491,6 +491,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#complex-example" class="md-nav__link">
+    Complex example
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -639,6 +646,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#complex-example" class="md-nav__link">
+    Complex example
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -687,7 +701,7 @@
 </code></pre></div>
 <h2 id="self-loop">Self loop</h2>
 <p>A self loop creates a copy of the component and reverses the order of the ports, that is, input is connected to output and viceversa. The operator <code>~</code> is used to create self loops.</p>
-<p>The ports of components in self loop this behaviour:
+<p>The ports of components in self loop follow this behaviour:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(in, out) -&gt; (out, in)
 </code></pre></div></p>
 <div class="highlight"><span class="filename">Example of self looped components</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">Res</span> <span class="o">=</span> <span class="n">R</span><span class="p">([</span><span class="n">GND</span><span class="p">,</span> <span class="n">net</span><span class="p">()])</span>
@@ -719,9 +733,10 @@
 <a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># (2, 1), (3, 1), (4, 1)</span>
 </code></pre></div>
 <h2 id="complex-manipulation">Complex manipulation</h2>
-<p>For components that are more complex, there are methods to defined the connections.
+<p>For components that are more complex, there are methods to perform the manipulations.
 The ports for chains are defined using masks, that is, a tuple whose non null
-positions mark the number of ports to chain. A chain will not work in this case with a Mosfet since the chain will be done, with the ports "out" and "GND". We need to define the chain using the first and second port.</p>
+positions mark the number of ports to manipulate. </p>
+<p>As an example, we cannot chain a Mosfet Mosfet since the chain will be done with the ports "out" and "GND". We need to define the chain using the first and second port.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">m</span> <span class="o">=</span> <span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nmos&quot;</span><span class="p">)</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">m</span><span class="o">.</span><span class="n">chain</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">m</span><span class="o">.</span><span class="n">parallel</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
@@ -730,30 +745,118 @@ positions mark the number of ports to chain. A chain will not work in this case 
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">m</span><span class="o">.</span><span class="n">direct</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="getting-ports">Getting ports</h3>
-<h3 id="setting-ports">Setting ports</h3>
-<h2 id="1d-and-2d-arrays">1D and 2D Arrays</h2>
-<p>Components that follow a 1D or 2D configuration can be instanciated quickly by usig the function <code>make_array</code>. This function takes 3 arguments.</p>
-<ul>
-<li>Tuple containing the 1D or 2D dimensions of the array. <strong>The coordinates are given as (Y, X)</strong></li>
-<li>The component instance that will be used to fill the array.</li>
-<li>If provided, a function that will received the coordinates of the component and will return the ports of that component.</li>
-</ul>
-<div class="highlight"><span class="filename">Generating a 1D array of resistances</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span> <span class="nf">ports_res</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;X_</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">GND</span><span class="p">]</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">arr</span> <span class="o">=</span> <span class="n">make_array</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="p">),</span> <span class="n">R</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]),</span> <span class="n">ports_fn</span><span class="o">=</span><span class="n">ports_res</span><span class="p">)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<p>In order to create connections between components that have been manipulated, there are two functions: <a class="autorefs autorefs-internal" href="../api/#nimphel.utils.port_getter"><code>port_getter</code></a> and <a class="autorefs autorefs-internal" href="../api/#nimphel.utils.port_setter"><code>port_setter</code></a>.</p>
+<div class="highlight"><span class="filename">Example of getting ports</span><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">chains</span> <span class="o">=</span> <span class="n">CustomSubckt</span><span class="o">.</span><span class="n">inst</span><span class="p">([</span><span class="s2">&quot;INPUT&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">],</span> <span class="p">{})</span> <span class="o">^</span> <span class="mi">3</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">chains_out</span> <span class="o">=</span> <span class="n">port_getter</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">Generating a 2D array of resistances</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span> <span class="nf">ports_res</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">p</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Y_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;X_</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">arr</span> <span class="o">=</span> <span class="n">array</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">R</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]),</span> <span class="n">ports_fn</span><span class="o">=</span><span class="n">ports_res</span><span class="p">)</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<p>The argument <code>flatten</code> removes null values from the ports and returns a tuple containing just the values of the ports requested.</p>
+<div class="highlight"><span class="filename">Usage of the flatten argument</span><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">chains_out</span> <span class="o">=</span> <span class="n">port_getter</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># chains_out = [(0, 1), (0, 2), (0, 3)]</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">chains_out</span> <span class="o">=</span> <span class="n">port_getter</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># chains_out = [(1,), (2,), (3,)]</span>
+</code></pre></div>
+<h3 id="setting-ports">Setting ports</h3>
+<p>The function <a class="autorefs autorefs-internal" href="../api/#nimphel.utils.port_setter"><code>port_setter</code></a> allows to set the ports of a list of components. It receives a list of components and a list of masks, whose values correspond to the final ports of each component</p>
+<div class="highlight"><span class="filename">Example of setting ports</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Components is a list of 3 components with two ports</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">mask</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;INPUT&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT_1&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;INPUT&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT_3&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;INPUT&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT_3&quot;</span><span class="p">)]</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">port_setter</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="1d-and-2d-arrays">1D and 2D Arrays</h2>
+<p>Components that follow a 1D or 2D configuration can be instanciated by using the function <code>make_array</code>. This function takes 3 arguments.</p>
+<ul>
+<li>Tuple containing the 1D or 2D dimensions of the array. <ul>
+<li><strong>For 2D arrays, the coordinates are given as <code>(Y, X)</code></strong></li>
+<li>For 1D arrays the dimension <code>(Y,)</code> represents the length of the array.</li>
+</ul>
+</li>
+<li>The component instance that will be used to fill the array.</li>
+<li>If provided, a function whose input is the coordinates of the component returns the ports of that component.</li>
+</ul>
+<div class="highlight"><span class="filename">Generating a 1D array of resistances</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span> <span class="nf">ports_res</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;X_</span><span class="si">{</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">GND</span><span class="p">]</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">arr</span> <span class="o">=</span> <span class="n">make_array</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="p">),</span> <span class="n">R</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]),</span> <span class="n">ports_fn</span><span class="o">=</span><span class="n">ports_res</span><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Generating a 2D array of resistances</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">def</span> <span class="nf">ports_res</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">p</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Y_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;X_</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="n">arr</span> <span class="o">=</span> <span class="n">array</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">R</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]),</span> <span class="n">ports_fn</span><span class="o">=</span><span class="n">ports_res</span><span class="p">)</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
 </code></pre></div>
 <p>The array is created by using numpy, so we have access to numpy tools.</p>
-<div class="highlight"><span class="filename">Printing an array of components.</span><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>     <span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+<div class="highlight"><span class="filename">Printing an array of components.</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>     <span class="nb">print</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+</code></pre></div>
+<h2 id="complex-example">Complex example</h2>
+<div class="highlight"><span class="filename">Creation of a RO PUF.</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">class</span> <span class="nc">Mosfet</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ports</span><span class="p">:</span> <span class="n">Ports</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Params</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>        <span class="n">parameters</span> <span class="o">=</span> <span class="n">params</span> <span class="k">if</span> <span class="n">params</span> <span class="k">else</span> <span class="p">{}</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>            <span class="n">ports</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">NMOS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">letter</span><span class="o">=</span><span class="s2">&quot;M&quot;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>        <span class="p">)</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="nd">@simple_component</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="k">class</span> <span class="nc">VCounter</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    <span class="sd">&quot;&quot;&quot;Verilog A Counter&quot;&quot;&quot;</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;counter&quot;</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    <span class="n">letter</span> <span class="o">=</span> <span class="s2">&quot;I&quot;</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s2">&quot;counter&quot;</span><span class="p">]</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="nd">@simple_component</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>    <span class="n">defaults</span><span class="p">:</span> <span class="n">Params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;C&quot;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="n">inv</span> <span class="o">=</span> <span class="n">Subckt</span><span class="p">(</span>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a>    <span class="s2">&quot;INV&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a>    <span class="p">[</span><span class="s2">&quot;vdd&quot;</span><span class="p">,</span> <span class="s2">&quot;gnd&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">],</span>
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a>    <span class="p">{</span><span class="s2">&quot;vthp&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;vthn&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;lp&quot;</span><span class="p">:</span> <span class="mf">0.06</span><span class="p">,</span> <span class="s2">&quot;ln&quot;</span><span class="p">:</span> <span class="mf">0.06</span><span class="p">},</span>
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a><span class="p">)</span>
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a>
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a><span class="n">inv</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nsvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a><span class="n">inv</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;psvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a><span class="n">inv</span><span class="o">.</span><span class="n">fix</span><span class="p">()</span>
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a>
+<a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a><span class="n">and_gate</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">()</span>
+<a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a><span class="n">out_and</span> <span class="o">=</span> <span class="n">net</span><span class="p">()</span>
+<a id="__codelineno-18-35" name="__codelineno-18-35" href="#__codelineno-18-35"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;psvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-36" name="__codelineno-18-36" href="#__codelineno-18-36"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;psvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-37" name="__codelineno-18-37" href="#__codelineno-18-37"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">,</span> <span class="n">out_and</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nsvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-38" name="__codelineno-18-38" href="#__codelineno-18-38"></a><span class="n">and_gate</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">out_and</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nsvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-39" name="__codelineno-18-39" href="#__codelineno-18-39"></a><span class="n">AND_GATE</span> <span class="o">=</span> <span class="n">and_gate</span><span class="o">.</span><span class="n">into_subckt</span><span class="p">(</span><span class="s2">&quot;AND&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">],</span> <span class="p">{})</span>
+<a id="__codelineno-18-40" name="__codelineno-18-40" href="#__codelineno-18-40"></a>
+<a id="__codelineno-18-41" name="__codelineno-18-41" href="#__codelineno-18-41"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">AND_GATE</span><span class="o">.</span><span class="n">inst</span><span class="p">([</span><span class="n">net</span><span class="p">(),</span> <span class="n">net</span><span class="p">(),</span> <span class="n">net</span><span class="p">()]))</span>
+<a id="__codelineno-18-42" name="__codelineno-18-42" href="#__codelineno-18-42"></a>
+<a id="__codelineno-18-43" name="__codelineno-18-43" href="#__codelineno-18-43"></a><span class="n">N_RO_PER_CHAIN</span> <span class="o">=</span> <span class="mi">5</span>
+<a id="__codelineno-18-44" name="__codelineno-18-44" href="#__codelineno-18-44"></a><span class="n">N_CHAINS</span> <span class="o">=</span> <span class="mi">3</span>
+<a id="__codelineno-18-45" name="__codelineno-18-45" href="#__codelineno-18-45"></a>
+<a id="__codelineno-18-46" name="__codelineno-18-46" href="#__codelineno-18-46"></a><span class="n">MUX</span> <span class="o">=</span> <span class="n">Subckt</span><span class="p">(</span><span class="s2">&quot;MUX&quot;</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;IN_</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_CHAINS</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;Sel&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">],</span> <span class="p">{})</span>
+<a id="__codelineno-18-47" name="__codelineno-18-47" href="#__codelineno-18-47"></a><span class="n">INV</span> <span class="o">=</span> <span class="n">Subckt</span><span class="p">(</span><span class="s2">&quot;INV&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">],</span> <span class="p">{})</span>
+<a id="__codelineno-18-48" name="__codelineno-18-48" href="#__codelineno-18-48"></a>
+<a id="__codelineno-18-49" name="__codelineno-18-49" href="#__codelineno-18-49"></a><span class="n">INV</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">GND</span><span class="p">,</span> <span class="n">GND</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nsvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-50" name="__codelineno-18-50" href="#__codelineno-18-50"></a><span class="n">INV</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Mosfet</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">VDD</span><span class="p">,</span> <span class="n">VDD</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;psvtlp&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-51" name="__codelineno-18-51" href="#__codelineno-18-51"></a><span class="n">INV</span><span class="o">.</span><span class="n">fix</span><span class="p">()</span>
+<a id="__codelineno-18-52" name="__codelineno-18-52" href="#__codelineno-18-52"></a>
+<a id="__codelineno-18-53" name="__codelineno-18-53" href="#__codelineno-18-53"></a><span class="n">inv</span> <span class="o">=</span> <span class="n">INV</span><span class="o">.</span><span class="n">inst</span><span class="p">([</span><span class="s2">&quot;in_chain&quot;</span><span class="p">,</span> <span class="n">net</span><span class="p">()],</span> <span class="p">{})</span>
+<a id="__codelineno-18-54" name="__codelineno-18-54" href="#__codelineno-18-54"></a>
+<a id="__codelineno-18-55" name="__codelineno-18-55" href="#__codelineno-18-55"></a><span class="n">chain</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">()</span>
+<a id="__codelineno-18-56" name="__codelineno-18-56" href="#__codelineno-18-56"></a>
+<a id="__codelineno-18-57" name="__codelineno-18-57" href="#__codelineno-18-57"></a><span class="n">chain</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inv</span> <span class="o">*</span> <span class="p">(</span><span class="n">N_RO_PER_CHAIN</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">))</span>
+<a id="__codelineno-18-58" name="__codelineno-18-58" href="#__codelineno-18-58"></a><span class="n">ro_chain</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">into_subckt</span><span class="p">(</span><span class="s2">&quot;RO_CHAIN&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;in_chain&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT&quot;</span><span class="p">],</span> <span class="p">{})</span>
+<a id="__codelineno-18-59" name="__codelineno-18-59" href="#__codelineno-18-59"></a>
+<a id="__codelineno-18-60" name="__codelineno-18-60" href="#__codelineno-18-60"></a><span class="n">chains</span> <span class="o">=</span> <span class="n">ro_chain</span><span class="o">.</span><span class="n">inst</span><span class="p">([</span><span class="s2">&quot;INPUT&quot;</span><span class="p">,</span> <span class="s2">&quot;OUTStable&quot;</span><span class="p">],</span> <span class="p">{})</span> <span class="o">^</span> <span class="n">N_CHAINS</span>
+<a id="__codelineno-18-61" name="__codelineno-18-61" href="#__codelineno-18-61"></a><span class="n">chains_out</span> <span class="o">=</span> <span class="n">port_getter</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-18-62" name="__codelineno-18-62" href="#__codelineno-18-62"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">chains</span><span class="p">)</span>
+<a id="__codelineno-18-63" name="__codelineno-18-63" href="#__codelineno-18-63"></a>
+<a id="__codelineno-18-64" name="__codelineno-18-64" href="#__codelineno-18-64"></a><span class="n">counters</span> <span class="o">=</span> <span class="n">VCounter</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">])</span> <span class="o">|</span> <span class="n">N_CHAINS</span>
+<a id="__codelineno-18-65" name="__codelineno-18-65" href="#__codelineno-18-65"></a><span class="n">port_setter</span><span class="p">(</span><span class="n">counters</span><span class="p">,</span> <span class="n">chains_out</span><span class="p">)</span>
+<a id="__codelineno-18-66" name="__codelineno-18-66" href="#__codelineno-18-66"></a><span class="n">netlist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">counters</span><span class="p">)</span>
 </code></pre></div>
 
 
