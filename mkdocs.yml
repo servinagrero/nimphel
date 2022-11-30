@@ -3,20 +3,38 @@ repo_url: https://github.com/servinagrero/nimphel
 repo_name: nimphel
 edit_uri: ""
 theme:
-    logo: img/logo.png
+    logo: img/logo.svg
     name: material
     palette:
-        primary: white
-        accent: light blue
+        - scheme: default
+          toggle:
+            icon: material/toggle-switch-off-outline
+            name: Switch to dark mode
+          primary: black
+          accent: light blue
+        - scheme: slate
+          toggle:
+            icon: material/toggle-switch
+            name: Switch to light mode
+          primary: white
+          accent: dark blue
     font:
-        text: Inter
-        code: JetBrains Mono
+        text: Roboto
+        code: Roboto Mono
     icon:
         repo: fontawesome/brands/github
     features:
+        - navigation.instant
         - navigation.tabs
+        - navigation.top
+        - navigation.sections
+        - navigation.expand
+        - toc.integrate
         - content.code.annotate
 
+extra_css:
+  - stylesheets/extra.css
+  
 plugins:
   - search
   - autorefs
@@ -36,6 +54,7 @@ markdown_extensions:
 
 nav:
     - Introduction: index.md
+    - Getting started: starting.md
     - Elements:
         - Components: elements/component.md
         - Subcircuits: elements/subcircuit.md

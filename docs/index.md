@@ -1,5 +1,5 @@
 <figure markdown>
-  ![logo](https://raw.githubusercontent.com/servinagrero/nimphel/gh-pages/img/logo.png){ width="150" }
+  ![logo](img/logo.svg){ width="150" }
 </figure>
 
 
