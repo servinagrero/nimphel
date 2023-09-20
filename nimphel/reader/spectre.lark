@@ -1,0 +1,33 @@
+?start: (subcircuit | instance | directive)+
+
+// Raw SPICE directive
+directive: NAME directive_params
+directive_params: param_value ((" " | "\\") param_value)*
+
+NAME: /[a-zA-Z0-9!${}_]+/
+?value: NUMBER | NAME | ESCAPED_STRING
+        | "[" value (" " value)* "]" -> value_list
+// param_value: NAME "=" value | value
+param_value: value ["=" value]
+
+// Component instance
+node: NAME | NUMBER
+nodes: "(" node (" " node)* ")"
+instance_params: ((" " | "\\") param_value)*
+instance_id: /[A-Z][0-9]+/
+instance: instance_id nodes NAME instance_params
+
+// Subcircuit
+subcircuit_nodes: (NAME (" " NAME)*)
+subcircuit_params: "parameters" (param_value (" " param_value)*)
+subcircuit.3: "subckt" NAME subcircuit_nodes [subcircuit_params] (instance)* "ends" NAME
+
+%import common.INT
+%import common.ESCAPED_STRING
+%import common.SIGNED_NUMBER -> NUMBER
+%import common.NEWLINE -> NL
+
+COMMENT: /\/\/[^\n]*/
+%ignore COMMENT
+%import common.WS
+%ignore WS

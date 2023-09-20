@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "nimphel"
+version = "0.1.0"
+description = "Open-source Python framework tackling rapid design exploration for the generation of modular and parametric electronic designs"
+authors = ["Sergio Vinagrero <servinagrero@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "nimphel"}]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+]
+
+[tool.poetry.dependencies]
+python = ">3.9"
+lark = "^1.1.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
