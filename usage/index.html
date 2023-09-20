@@ -9,17 +9,15 @@
       
       
       
-        <link rel="prev" href="../core/">
+        <link rel="prev" href="../writers/">
       
-      
-        <link rel="next" href="../writers/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.6">
     
     
       
-        <title>Parsing - NIMPHEL</title>
+        <title>Use cases - NIMPHEL</title>
       
     
     
@@ -75,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#parsing-netlists" class="md-skip">
+        <a href="#process-variability" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +105,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Parsing
+              Use cases
             
           </span>
         </div>
@@ -235,12 +233,10 @@
         
   
   
-    
-  
 
 
   <li class="md-tabs__item">
-    <a href="./" class="md-tabs__link md-tabs__link--active">
+    <a href="../parsers/" class="md-tabs__link">
       Parsing
     </a>
   </li>
@@ -261,10 +257,12 @@
         
   
   
+    
+  
 
 
   <li class="md-tabs__item">
-    <a href="../usage/" class="md-tabs__link">
+    <a href="./" class="md-tabs__link md-tabs__link--active">
       Use cases
     </a>
   </li>
@@ -366,59 +364,11 @@
 
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Parsing
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../parsers/" class="md-nav__link">
         Parsing
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#parsing-spice-netlists" class="md-nav__link">
-    Parsing SPICE netlists
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deserializing-circuits" class="md-nav__link">
-    Deserializing circuits
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -444,11 +394,62 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Use cases
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Use cases
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#process-variability" class="md-nav__link">
+    Process variability
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chain-of-components" class="md-nav__link">
+    Chain of components
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2d-array-of-components" class="md-nav__link">
+    2D array of components
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -468,56 +469,78 @@
                   
 
 
-<h1 id="parsing-netlists">Parsing netlists</h1>
-<p>Parsers allow reading a set of SPICE text formats and convert them into nimphel <code>Circuits</code>. Parsing is performed thanks to the <a href="https://github.com/lark-parser/lark">Lark</a> library.</p>
-<h2 id="parsing-spice-netlists">Parsing SPICE netlists</h2>
-<p>In order to parse a netlist, a <code>Reader</code> object needs to be created first. A reader needs a Lark grammar and a transformer. Nimphel already comes with some predefined grammars. </p>
-<p>As of today the following parsers are implemented: <code>Spectre</code>. 
-More grammars and parsers will be added in the future.</p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>These grammars can be found in the <code>*.lark</code> files inside the <code>reader</code> directory.</p>
-</div>
-<p>The following examples shows how to create a <code>Reader</code> object and use it to parse a netlist file or a string.</p>
-<div class="highlight"><span class="filename">Parsing a netlist</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">nimphel.reader</span> <span class="kn">import</span> <span class="n">Reader</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">parser</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="s2">&quot;grammar&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Parse a netlist file</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">circuit</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/netlist&quot;</span><span class="p">)</span>
+  <h1>Use cases</h1>
+
+<p>This section provides a small list of real life use cases that nimphel was designed to solve.</p>
+<h2 id="process-variability">Process variability</h2>
+<p>As it was stated in the rationale, this project started from a set of utility functions and scripts to perform parametric analysis at large scale.</p>
+<p>Since component and instance parameters can be manipulated with python dictionaries, process variability comes basically for free.</p>
+<div class="highlight"><span class="filename">Example of process variability</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">nimphel</span> <span class="kn">import</span> <span class="n">Circuit</span><span class="p">,</span> <span class="n">Component</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">nimphel.writer</span> <span class="kn">import</span> <span class="n">SpectreWriter</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span> <span class="nn">nimphel.reader</span> <span class="kn">import</span> <span class="n">Reader</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">import</span> <span class="nn">random</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">circuit</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="s2">&quot;spectre&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/netlist_template&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">netlist</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="s2">M0 (0 1) R R=100k</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="s2">...</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="s2">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># We want to modify the next component</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># mos = Component(&quot;nmos&quot;, [&quot;D&quot;, &quot;G&quot;, &quot;S&quot;, &quot;GND&quot;], {})</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">W_NOM</span> <span class="o">=</span> <span class="mf">65e-9</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">L_NOM</span> <span class="o">=</span> <span class="mf">100e-9</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Parse a string</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">circuit</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">reads</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">def</span> <span class="nf">params</span><span class="p">():</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="s2">&quot;w&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="n">W_NOM</span><span class="p">,</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">W_NOM</span><span class="p">),</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="n">L_NOM</span><span class="p">,</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">W_NOM</span><span class="p">),</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="p">}</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="k">for</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">circuit</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="k">if</span> <span class="n">inst</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;nmos&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="k">continue</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">updated</span> <span class="o">=</span> <span class="n">params</span><span class="p">()</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">inst</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">inst</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">updated</span><span class="p">}</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">writer</span> <span class="o">=</span> <span class="n">SpectreWriter</span><span class="p">()</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="nb">print</span><span class="p">(</span><span class="n">writer</span><span class="o">.</span><span class="n">writes</span><span class="p">(</span><span class="n">circuit</span><span class="p">))</span>
 </code></pre></div>
-<p>If the parsing was unsuccessful, the reader will return <code>None</code> and will print the exception. The following exceptions can be raised during parsing:</p>
-<ul>
-<li><code>UnexpectedEOF</code>: Raised if unexpected end of file is found.</li>
-<li><code>UnexpectedToken</code>: Raised if an unexpected token is found.</li>
-<li><code>UnexpectedCharacters</code>: Raised if an unexpected character is found when parsing.</li>
-</ul>
-<p>Lark allows creating custom <code>Transformers</code> that will take a tree (what lark parses) into a new tree where each component has been modified by an user defined function. It can be used for instance to parse text and create python objects directly. To specify the transformer used, provide the <code>transformer</code> parameter along with the transformer class. Nimphel already includes the transformer <code>ToCircuit</code> that will automatically create a circuit with instances, subcircuit definitions and SPICE directives.</p>
-<p>To know more about transformers, please refer to the official <a href="https://lark-parser.readthedocs.io/en/latest/visitors.html">documentation</a>.</p>
-<div class="highlight"><span class="filename">Specifying a transformer when parsing</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">reader</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="s2">&quot;spectre&quot;</span><span class="p">,</span> <span class="n">transformer</span><span class="o">=</span><span class="n">CustomTransformer</span><span class="p">)</span>
+<h2 id="chain-of-components">Chain of components</h2>
+<div class="highlight"><span class="filename">Example of a chain of components</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">nimphel.core</span> <span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">Circuit</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">custom_circuit</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/netlist&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="p">()</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">R</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="s2">&quot;resistor&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;GND&quot;</span><span class="p">,</span> <span class="s2">&quot;VDD&quot;</span><span class="p">],</span> <span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mf">1e3</span><span class="p">})</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">chain_length</span> <span class="o">=</span> <span class="mi">42</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">chain_length</span><span class="p">):</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">inst</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="p">],</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="n">i</span><span class="p">})</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">circuit</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="deserializing-circuits">Deserializing circuits</h2>
-<p>SPICE netlists are the base format of all SPICE simulators, but sometimes we may like to interface with some tools that do not understand this format. To solve this issue, we can create a custo reader class that overloads the <code>reads</code> and <code>read</code> method to deserialize data into a circuit object.</p>
-<p>The following example shows how to create a <code>JsonReader</code> that will deserialize a circuit from a JSON file and create the resulting circuit. Since this reader overrides the <code>read</code> method, it should also take care of Exceptions that the deserializing process may raise.</p>
-<div class="highlight"><span class="filename">Defining a custom deserializer</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">json</span>
+<div class="highlight"><span class="filename">Using a list comprehension</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">pairwise</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">class</span> <span class="nc">JsonReader</span><span class="p">(</span><span class="n">Reader</span><span class="p">):</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>            <span class="n">content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="k">return</span> <span class="n">Circuit</span><span class="p">(</span><span class="o">**</span><span class="n">content</span><span class="p">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">circuit</span> <span class="o">=</span> <span class="n">JsonReader</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;/path/to/circuit.json&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">pairs</span> <span class="o">=</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pairwise</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">chain_length</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">chain</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="n">f</span><span class="p">,</span><span class="n">s</span><span class="p">],</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="n">i</span><span class="p">})</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">]</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">circuit</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
+</code></pre></div>
+<p>Both of the examples above produce the following SPICE netlist. We can see from this example that we can easily parametrize the structure of the chain, since we can define the length of the chain and create a different instance at every index of the chain.</p>
+<div class="highlight"><span class="filename">Generated SPICE netlist</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>M0 (0 1) resistor R=1k
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>M1 (1 2) resistor R=2k
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>M2 (2 3) resistor R=3k
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>M3 (3 4) resistor R=4k
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>...
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>M41 (41 42) resistor R=42k
+</code></pre></div>
+<h2 id="2d-array-of-components">2D array of components</h2>
+<div class="highlight"><span class="filename">Example creating a 2D array</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="n">comp</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Reduced version</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">coords</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">matrix</span> <span class="o">=</span> <span class="p">[</span><span class="n">comp</span><span class="o">.</span><span class="n">new</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
 </code></pre></div>
 
 
