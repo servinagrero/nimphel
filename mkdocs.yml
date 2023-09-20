@@ -1,0 +1,61 @@
+site_name: NIMPHEL
+repo_url: https://github.com/servinagrero/nimphel
+repo_name: nimphel
+edit_uri: ""
+theme:
+    logo: img/logo.svg
+    name: material
+    palette:
+        - scheme: default
+          toggle:
+            icon: material/toggle-switch-off-outline
+            name: Switch to dark mode
+          primary: black
+          accent: light blue
+        - scheme: slate
+          toggle:
+            icon: material/toggle-switch
+            name: Switch to light mode
+          primary: white
+          accent: dark blue
+    font:
+        text: Roboto
+        code: Roboto Mono
+    icon:
+        repo: fontawesome/brands/github
+    features:
+        - navigation.instant
+        - navigation.tabs
+        - navigation.top
+        - navigation.sections
+        - navigation.expand
+        - toc.integrate
+        - content.code.annotate
+
+extra_css:
+  - stylesheets/extra.css
+  
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - def_list
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.details
+  - pymdownx.superfences
+
+nav:
+    - index.md
+    - Getting started: starting.md
+    - Core: core.md
+    - Parsing: parsers.md
+    - Exporting: writers.md
+    - Use cases: usage.md
